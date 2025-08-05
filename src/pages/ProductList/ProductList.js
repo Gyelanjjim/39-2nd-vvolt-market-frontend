@@ -64,13 +64,13 @@ const ProductList = () => {
         fetch(`${APIS.ipAddress}/products`)
           .then(res => res.json())
           .then(result => {
-            setItemList(result);
+            setItemList(result.data);
           });
       } else {
         fetch(`${APIS.ipAddress}/products?category=${currentCategory}`)
           .then(res => res.json())
           .then(result => {
-            setItemList(result);
+            setItemList(result.data);
           });
       }
     } else {
@@ -101,7 +101,7 @@ const ProductList = () => {
       fetch(`${APIS.ipAddress}/products`)
         .then(res => res.json())
         .then(result => {
-          const aroundItem = result.filter(obj => {
+          const aroundItem = result.data.filter(obj => {
             const distance = getDistance(
               currentLat,
               currentlng,

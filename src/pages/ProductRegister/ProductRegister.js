@@ -108,7 +108,7 @@ export default function ProductRegister() {
             Authorization: localStorage.getItem('TOKEN'),
           },
           body: JSON.stringify({
-            imageUrl: data.data.image_url,
+            imageUrl: data.data.imageUrl,
             name: name,
             categoryId: category_id,
             location: userLocation,

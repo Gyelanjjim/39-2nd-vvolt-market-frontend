@@ -49,7 +49,7 @@ const Footer = () => {
         </LinkList>
       </WrapLink>
       <WrapProfile className="wrapProfile">
-        <Developer className="developer">DEVERLOPER</Developer>
+        <Developer className="developer">DEVELOPER</Developer>
         <Profiles className="profiles">
           {PROFILE_LIST.map((obj, index) => {
             return (

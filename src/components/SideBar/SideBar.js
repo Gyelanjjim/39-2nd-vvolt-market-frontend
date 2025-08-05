@@ -42,7 +42,7 @@ export default function SideBar() {
                   navigate(`/productdetail/${obj.productId}`);
                 }}
                 key={index}
-                src={obj.images[0]}
+                src={obj.images[0].imageUrl}
               />
             );
           })}

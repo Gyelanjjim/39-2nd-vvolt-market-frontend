@@ -26,7 +26,7 @@ const StoreListItem = ({ item, curruntMenu }) => {
       {item && (
         <ProductLink to={`/productDetail/${id}`}>
           {curruntMenu !== '구매내역' ? (
-            <ProductImg src={images[0].image_url} alt="productImg" />
+            <ProductImg src={images[0]?.imageUrl} alt="productImg" />
           ) : (
             <SelledProductImg url={images}>판매완료</SelledProductImg>
           )}

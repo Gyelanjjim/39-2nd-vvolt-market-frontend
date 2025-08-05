@@ -14,7 +14,7 @@ import { useParams } from 'react-router-dom';
 import { APIS } from '../../config';
 
 export default function ProductDetail() {
-  const [productDetail, setProductDetail] = useState();
+  const [productInfo, setProductDetail] = useState();
   const [storeInfo, setStoreInfo] = useState();
   const params = useParams();
   const productId = params.id;
@@ -40,11 +40,11 @@ export default function ProductDetail() {
       // fetch('/data/productDetail.json') //mockdata
       .then(res => res.json())
       .then(data => {
-        console.log(data.productDetailData);
-        setProductDetail(data.productDetailData.productDetail[0]);
-        setStoreInfo(data.productDetailData.storeInfor);
-        console.log(data.isLike);
-        setIsActive(data.isLike);
+        const { product, store, reviews, isLiked, likeCount } = data.data;
+        product.likeCount = likeCount;
+        setProductDetail(product);
+        setStoreInfo(store);
+        setIsActive(isLiked);
       });
   }, []);
 
@@ -53,7 +53,7 @@ export default function ProductDetail() {
   return (
     <>
       <WrapProductDetail>
-        {productDetail && storeInfo && (
+        {productInfo && storeInfo && (
           <MainWrap>
             <InfoWrap>
               <Banner
@@ -63,24 +63,25 @@ export default function ProductDetail() {
                 modules={[Navigation]}
                 className="mySwiper"
               >
-                {productDetail &&
-                  productDetail.images.map((str, index) => {
+                {productInfo &&
+                  productInfo.images.map(({ imageUrl }, index) => {
                     return (
                       <ImgSwiperSlide key={index}>
-                        <SlideImg src={str} alt={productDetail.productName} />
+                        <SlideImg
+                          src={imageUrl}
+                          alt={productInfo.productName}
+                        />
                       </ImgSwiperSlide>
                     );
                   })}
               </Banner>
 
-              <ProductName>{productDetail.productName}</ProductName>
-              <Price>
-                {Number(productDetail.productPrice).toLocaleString()}원
-              </Price>
+              <ProductName>{productInfo.productName}</ProductName>
+              <Price>{Number(productInfo.price).toLocaleString()}원</Price>
               <StatusList>
                 <StatusIcon>
                   <StatusIconImg src={iconHeart} />
-                  {productDetail.likeCount}
+                  {productInfo.likeCount}
                 </StatusIcon>
                 <StatusIcon>
                   <StatusIconImg src={iconHour} />
@@ -95,7 +96,7 @@ export default function ProductDetail() {
                 </ListElement>
                 <ListElement>
                   <ListElementTit>거래지역</ListElementTit>
-                  <ListElementIcon src={iconLocal} /> {productDetail.location}
+                  <ListElementIcon src={iconLocal} /> {productInfo.location}
                 </ListElement>
               </DetailList>
 
@@ -119,9 +120,9 @@ export default function ProductDetail() {
                             if (res.status === 201) {
                               alert('찜목록에 저장되었습니다.');
                               setProductDetail({
-                                ...productDetail,
+                                ...productInfo,
                                 likeCount: `${
-                                  Number(productDetail.likeCount) + 1
+                                  Number(productInfo.likeCount) + 1
                                 }`,
                               });
                               setIsActive(true);
@@ -146,9 +147,9 @@ export default function ProductDetail() {
                             if (res.status === 201) {
                               alert('찜목록에서 제거되었습니다.');
                               setProductDetail({
-                                ...productDetail,
+                                ...productInfo,
                                 likeCount: `${
-                                  Number(productDetail.likeCount) - 1
+                                  Number(productInfo.likeCount) - 1
                                 }`,
                               });
                               setIsActive(false);
@@ -165,31 +166,65 @@ export default function ProductDetail() {
                   isActive={isActive}
                 >
                   {/* <LikeImg src={isWishAdd ? { Heart } : { Heart2 }}></LikeImg>  */}
-                  찜<LikeNumber> {productDetail.likeCount}</LikeNumber>
+                  찜<LikeNumber> {productInfo.likeCount}</LikeNumber>
                 </InfoButton>
 
                 <StoreBtn onClick={purchaseLink}>바로구매</StoreBtn>
+
+                <DeleteButton
+                  onClick={() => {
+                    if (window.confirm('상품을 삭제하시겠습니까?')) {
+                      fetch(`${APIS.ipAddress}/products/${productId}`, {
+                        method: 'DELETE',
+                        headers: {
+                          authorization: localStorage.getItem('TOKEN'),
+                        },
+                      })
+                        .then(res => {
+                          if (res.ok) {
+                            alert('삭제되었습니다.');
+                            const list = JSON.parse(
+                              localStorage.getItem('recentProduct')
+                            ).filter(v => v.id !== Number(productId));
+                            localStorage.setItem(
+                              'recentProduct',
+                              JSON.stringify(list)
+                            );
+                            window.location.href = '/?category=';
+                          } else {
+                            throw new Error('삭제에 실패했습니다.');
+                          }
+                        })
+                        .catch(error => {
+                          alert('삭제에 실패했습니다.');
+                          console.error(error);
+                        });
+                    }
+                  }}
+                >
+                  삭제
+                </DeleteButton>
               </ButtonWrap>
             </InfoWrap>
 
             <DetailWrap>
               <ProductInfo>
                 <PdTitle>상품정보</PdTitle>
-                <PdText> {productDetail.productDesc} </PdText>
+                <PdText> {productInfo.description} </PdText>
               </ProductInfo>
 
               <StoreInfo>
                 <StoreBox>
                   <PdTitle>상점정보</PdTitle>
-                  <StoreName>{storeInfo[0].nickName}</StoreName>
+                  <StoreName>{storeInfo.nickName}</StoreName>
                   <StoreUl>
-                    <StoreLi> 상품 {storeInfo[0].productCount}개 </StoreLi>
-                    <StoreLi> 팔로워 {storeInfo[0].followerCount} </StoreLi>
+                    <StoreLi> 상품 {storeInfo.productCount}개 </StoreLi>
+                    <StoreLi> 팔로워 {storeInfo.followerCount} </StoreLi>
                   </StoreUl>
 
-                  <StoreImgList>
+                  {/* <StoreImgList>
                     <StoreImgLi>
-                      <StoreImg src={storeInfo[0].images[0]} />
+                      <StoreImg src={storeInfo.userImage} />
                       <StorePrice>
                         {Number(storeInfo[0].price).toLocaleString()}원
                       </StorePrice>
@@ -207,7 +242,7 @@ export default function ProductDetail() {
                   <StoreMoreBtn onClick={productMore}>
                     <BtnRed>{storeInfo[0].productCount - 2}개 </BtnRed>
                     상품 더보기
-                  </StoreMoreBtn>
+                  </StoreMoreBtn> */}
                 </StoreBox>
 
                 <StoreBtnWrap>
@@ -453,6 +488,8 @@ const StoreBtn = styled.button`
   border: 2px solid #521978;
   background: #fff;
   cursor: pointer;
+  margin-right: 20px;
+
   &:hover {
     background-color: #521978;
     color: #fff;
@@ -479,4 +516,22 @@ const SlideImg = styled.img`
 const LikeImg = styled.img`
   width: 20px;
   line-height: 20px;
+`;
+
+const DeleteButton = styled.button`
+  height: 50px;
+  width: 100%;
+  color: #521978;
+  font-size: 20px;
+  font-weight: bold;
+  border: 2px solid #521978;
+  background-color: #521978;
+  background: #fff;
+  margin-right: 20px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #cc0000;
+    color: #fff;
+  }
 `;

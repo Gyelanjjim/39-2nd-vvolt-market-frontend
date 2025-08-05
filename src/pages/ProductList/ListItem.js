@@ -4,12 +4,21 @@ import styled from 'styled-components';
 
 const ListItem = ({ item }) => {
   const {
-    productId,
-    productName,
-    productPrice,
-    registerDate,
+    id,
+    name,
+    price,
     location,
+    latitude,
+    longitude,
+    category,
     images,
+    createdAt,
+    // productId,
+    // productName,
+    // productPrice,
+    // registerDate,
+    // location,
+    // images,
   } = item;
 
   const getTimeGap = registerDate => {
@@ -53,18 +62,16 @@ const ListItem = ({ item }) => {
   return (
     <Product>
       {item && (
-        <ProductLink
-          onClick={setRecentProduct}
-          to={`/productDetail/${productId}`}
-        >
-          <ProductImg src={images[0]} alt="productImg" />
+        <ProductLink onClick={setRecentProduct} to={`/productDetail/${id}`}>
+          <ProductImg
+            src={images[0]?.imageUrl || '/images/product_default.png'}
+            alt="productImg"
+          />
           <ProductBottom>
-            <ProductName>{productName}</ProductName>
+            <ProductName>{name}</ProductName>
             <ProductInfo>
-              <ProductPrice>
-                {Number(productPrice).toLocaleString()} 원
-              </ProductPrice>
-              <ProductTime>{getTimeGap(registerDate)}</ProductTime>
+              <ProductPrice>{Number(price).toLocaleString()} 원</ProductPrice>
+              <ProductTime>{getTimeGap(createdAt)}</ProductTime>
             </ProductInfo>
           </ProductBottom>
           <ProductLocation>
