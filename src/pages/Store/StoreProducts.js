@@ -9,7 +9,12 @@ export default function StoreProducts({ curruntMenu, userId }) {
   useEffect(() => {
     if (curruntMenu === '상품') {
       // fetch('/data/productsInfo.json')
-      fetch(`${APIS.ipAddress}/products/store/${userId}`)
+      fetch(`${APIS.ipAddress}/products/store/${userId}`, {
+        method: 'get',
+        headers: {
+          authorization: localStorage.getItem('TOKEN'),
+        },
+      })
         .then(res => res.json())
         .then(result => {
           setItemList(result);

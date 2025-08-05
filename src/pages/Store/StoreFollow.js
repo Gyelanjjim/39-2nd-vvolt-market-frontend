@@ -8,24 +8,25 @@ export default function StoreFollow({ curruntMenu, userId }) {
   useEffect(() => {
     if (curruntMenu === '팔로잉') {
       // fetch(`/data/followUserInfo${userId}.json`)
-      fetch(`${APIS.ipAddress}/follow/${userId}`)
+      fetch(`${APIS.ipAddress}/follow/following/${userId}`)
         .then(res => res.json())
         .then(result => {
-          setFollowList(result);
+          setFollowList(result.data);
         });
     } else if (curruntMenu === '팔로워') {
       // fetch(`/data/followUserInfo${userId}.json`)
 
-      fetch(`${APIS.ipAddress}/followee/${userId}`)
+      fetch(`${APIS.ipAddress}/followee/follower/${userId}`)
         .then(res => res.json())
         .then(result => {
-          setFollowList(result.followee_List);
+          setFollowList(result.data);
         });
     }
   }, []);
   return (
     <WrapStoreFollow>
       {followList &&
+        followList.length &&
         followList.map((obj, index) => {
           return <FollowUser key={index} followInfo={obj}></FollowUser>;
         })}

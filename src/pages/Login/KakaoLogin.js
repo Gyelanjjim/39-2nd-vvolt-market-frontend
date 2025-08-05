@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { APIS } from '../../config';
 import variables from '../../styles/variables';
-import { safeFetch } from '../../utils/apiHelper';
 
 export default function KakaoLogin() {
   const navigate = useNavigate();
@@ -11,7 +10,7 @@ export default function KakaoLogin() {
   const KAKAO_CODE = location.search.split('=')[1];
 
   useEffect(() => {
-    safeFetch(`${APIS.ipAddress}/auth/kakao-login`, {
+    fetch(`${APIS.ipAddress}/auth/kakao-login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

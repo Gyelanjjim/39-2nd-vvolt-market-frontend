@@ -51,14 +51,15 @@ export default function Store() {
         }
       })
       .catch(error => alert(error))
-      .then(result => {
-        setStoreData(result.shopData);
-        setIsMyShop(result.isMyShop);
-        setMyData(result.myData);
-        setFileImage(result.shopData.sellerImg);
-        setChangedStoreName(result.shopData.sellerName);
-        setChangedStoreInfo(result.shopData.sellerIntro);
-        setFollowIsCheck(result.isFollow);
+      .then(data => {
+        const { isMyShop, isFollow, myData, shopData } = data.data;
+        setStoreData(shopData);
+        setIsMyShop(isMyShop);
+        setMyData(myData);
+        setFileImage(shopData.sellerImg);
+        setChangedStoreName(shopData.sellerName);
+        setChangedStoreInfo(shopData.sellerIntro);
+        setFollowIsCheck(isFollow || false);
       });
     // //mockdata fetch
     // fetch('/data/storeInfo.json')
