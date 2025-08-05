@@ -6,31 +6,36 @@ import koLocale from 'timeago.js/lib/lang/ko'; // 한글로 변환
 register('ko', koLocale);
 const StoreListItem = ({ item, curruntMenu }) => {
   const {
-    productId,
-    productName,
-    productPrice,
-    registerDate,
+    id,
+    name,
+    price,
     location,
+    category,
     images,
+    createdAt,
+    // productId,
+    // productName,
+    // productPrice,
+    // registerDate,
+    // location,
+    // images,
   } = item;
 
   return (
     <Product>
       {item && (
-        <ProductLink to={`/productDetail/${productId}`}>
+        <ProductLink to={`/productDetail/${id}`}>
           {curruntMenu !== '구매내역' ? (
-            <ProductImg src={images[0]} alt="productImg" />
+            <ProductImg src={images[0].image_url} alt="productImg" />
           ) : (
             <SelledProductImg url={images}>판매완료</SelledProductImg>
           )}
 
           <ProductBottom>
-            <ProductName>{productName}</ProductName>
+            <ProductName>{name}</ProductName>
             <ProductInfo>
-              <ProductPrice>
-                {Number(productPrice).toLocaleString()} 원
-              </ProductPrice>
-              <ProductTime>{format(registerDate, 'ko')}</ProductTime>
+              <ProductPrice>{Number(price).toLocaleString()} 원</ProductPrice>
+              <ProductTime>{format(createdAt, 'ko')}</ProductTime>
             </ProductInfo>
           </ProductBottom>
           <ProductLocation>

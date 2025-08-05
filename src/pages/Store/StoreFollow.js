@@ -16,9 +16,10 @@ export default function StoreFollow({ curruntMenu, userId }) {
     } else if (curruntMenu === '팔로워') {
       // fetch(`/data/followUserInfo${userId}.json`)
 
-      fetch(`${APIS.ipAddress}/followee/follower/${userId}`)
+      fetch(`${APIS.ipAddress}/follow/follower/${userId}`)
         .then(res => res.json())
         .then(result => {
+          console.log(`result`, result);
           setFollowList(result.data);
         });
     }

@@ -37,7 +37,7 @@ export default function Store() {
   //유저 정보 fetch
   useEffect(() => {
     //백엔드 서버에서 fetch
-    fetch(`${APIS.ipAddress}/users/${userId}`, {
+    fetch(`${APIS.ipAddress}/users/1`, {
       method: 'get',
       headers: {
         authorization: localStorage.getItem('TOKEN'),
@@ -103,7 +103,7 @@ export default function Store() {
 
     //이미지 수정 formData 보내기
     console.log(formData);
-    fetch(`${APIS.ipAddress}/users`, {
+    fetch(`${APIS.ipAddress}/users/me`, {
       method: 'put',
       headers: {
         Authorization: localStorage.getItem('TOKEN'),
@@ -232,7 +232,7 @@ export default function Store() {
                         //   ...prev,
                         //   sellerName: changedStoreName,
                         // }));
-                        fetch(`${APIS.ipAddress}/users`, {
+                        fetch(`${APIS.ipAddress}/users/me`, {
                           method: 'put',
                           headers: {
                             'Content-Type': 'application/json;charset=utf-8',
@@ -292,7 +292,7 @@ export default function Store() {
                         //   sellerIntro: changedStoreInfo,
                         // }));
 
-                        fetch(`${APIS.ipAddress}/users`, {
+                        fetch(`${APIS.ipAddress}/users/me`, {
                           method: 'put',
                           headers: {
                             'Content-Type': 'application/json;charset=utf-8',

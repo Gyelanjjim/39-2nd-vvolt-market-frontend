@@ -77,7 +77,7 @@ export default function Payment() {
     })
       .then(response => response.json())
       .then(data => {
-        setUserInfo(data.myData);
+        setUserInfo(data.data?.myData);
       });
   }, []);
 

@@ -17,7 +17,7 @@ export default function StoreProducts({ curruntMenu, userId }) {
       })
         .then(res => res.json())
         .then(result => {
-          setItemList(result);
+          setItemList(result.data);
         });
     } else if (curruntMenu === '찜') {
       // fetch('/data/productsInfo.json')

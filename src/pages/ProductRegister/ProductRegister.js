@@ -36,14 +36,16 @@ export default function ProductRegister() {
     })
       .then(response => response.json())
       .then(data => {
-        setUserLocation(data.myData.address);
+        const { address, latitude, longitude, writerId } = data.data.myData;
+
+        setUserLocation(address);
         setProductInfo({
           ...productInfo,
-          latitude: data.myData.latitude,
-          longitude: data.myData.longitude,
-          location: data.myData.address,
+          latitude,
+          longitude,
+          location: address,
         });
-        setUserId(data.myData.writerId);
+        setUserId(writerId);
       });
   }, []);
 
@@ -89,7 +91,7 @@ export default function ProductRegister() {
       body: form,
     })
       .then(res => {
-        if (res.status === 200) {
+        if (res.status === 201) {
           return res.json();
         } else {
           throw new Error('이미지 url 받아오기 실패');
@@ -97,23 +99,21 @@ export default function ProductRegister() {
       })
       .catch(error => alert(error))
       .then(data => {
+        console.log(JSON.stringify(data));
         // this.setState({ files: [] });
         fetch(`${APIS.ipAddress}/products`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json;charset=utf-8',
-
             Authorization: localStorage.getItem('TOKEN'),
           },
           body: JSON.stringify({
-            image_url: data.image_url,
+            imageUrl: data.data.image_url,
             name: name,
-            category_id: category_id,
+            categoryId: category_id,
             location: userLocation,
-            // latitude: 33.333,
-            // longitude: 33.333,
-            latitude: latitude,
-            longitude: longitude,
+            latitude,
+            longitude,
             product_status_id: 1,
             price: price,
             description: description,
@@ -140,14 +140,15 @@ export default function ProductRegister() {
     })
       .then(response => response.json())
       .then(data => {
-        setUserLocation(data.myData.address);
+        const { address, latitude, longitude, writerId } = data.data.myData;
+        setUserLocation(address);
         setProductInfo({
           ...productInfo,
-          latitude: data.myData.latitude,
-          longitude: data.myData.longitude,
-          location: data.myData.address,
+          latitude,
+          longitude,
+          location: address,
         });
-        setUserId(data.myData.writerId);
+        setUserId(writerId);
       });
   };
 

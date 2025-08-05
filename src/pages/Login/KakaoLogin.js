@@ -20,6 +20,7 @@ export default function KakaoLogin() {
       .then(res => res.json())
       .then(data => {
         localStorage.setItem('TOKEN', `Bearer ${data.data?.accessToken}`);
+        localStorage.setItem('MY_USER_ID', `${data.data?.userId}`);
         if (data.data?.isMember === true) {
           navigate('/?category=');
         } else {
