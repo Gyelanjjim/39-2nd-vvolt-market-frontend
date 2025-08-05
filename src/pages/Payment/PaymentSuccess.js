@@ -40,7 +40,7 @@ const PaymentSuccess = () => {
 
     let options = {
       method: 'POST',
-      url: 'http://10.58.52.191:4000/tossPayment/confirm',
+      url: 'http://localhost:10101/tossPayment/confirm',
       headers: {
         Authorization: `Basic dGVzdF9za19PQUxuUXZEZDJWSmw0OWxSbGphOE1qN1g0MW1OOg`,
         'Content-Type': 'application/json',

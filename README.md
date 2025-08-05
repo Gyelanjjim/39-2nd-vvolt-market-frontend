@@ -15,7 +15,6 @@
 
 <img width="840" alt="스크린샷 2022-12-08 오전 1 35 46" src="https://user-images.githubusercontent.com/108253922/206603252-88d36410-961b-4ac1-85a2-a3b7dae6e694.png">
 
-
 ## 👩‍👩‍👧‍👦 VVolt Martket 팀
 
 - `BE` 김한솔, 박상욱, 송철진 / `FE` 강지민, 심동섭, 정효원, 조은혜
@@ -30,7 +29,6 @@
 - 🔵 `동섭 FE` - 상품리스트 페이지, 상점페이지, footer
 - 🔵 `효원 FE` - 회원가입 페이지, 결제 페이지
 - 🔵 `은혜 FE` - nav, side바, 상품 디테이 페이지
-
 
 ## 🛠 VVolt Martket Tools
 
@@ -50,7 +48,6 @@
 1. 주변 중고물품 검색
 1. 상품 등록
 1. 상품 구매
-
 
 <br>
 

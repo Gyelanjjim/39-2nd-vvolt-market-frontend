@@ -25,7 +25,7 @@ const Nav = () => {
     })
       .then(response => response.json())
       .then(data => {
-        console.log(data.myData.writerId);
+        console.log('유저정보 응답:', data);
         setUserId(data.myData.writerId);
       });
     fetch(`${APIS.ipAddress}/products`)
@@ -58,6 +58,7 @@ const Nav = () => {
           </WrapSearch>
           <WrapSearchedList>
             {itemList &&
+              itemList.length > 0 &&
               itemList.map((obj, index) => {
                 if (
                   obj.productName.includes(searchInput) &&

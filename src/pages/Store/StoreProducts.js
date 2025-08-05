@@ -36,6 +36,7 @@ export default function StoreProducts({ curruntMenu, userId }) {
   return (
     <WrapStoreProducts>
       {itemList &&
+        itemList.length &&
         itemList.map((obj, index) => {
           return (
             <StoreListItem key={index} item={obj} curruntMenu={curruntMenu} />

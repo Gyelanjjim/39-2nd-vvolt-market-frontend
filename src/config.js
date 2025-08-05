@@ -1,5 +1,5 @@
-const BASE_URL = 'http://10.58.52.164:3000';
+const BASE_URL = 'http://localhost:10101';
 
 export const APIS = {
-  ipAddress: `${BASE_URL}`,
+  ipAddress: `${BASE_URL}/api`,
 };
