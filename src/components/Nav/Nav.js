@@ -126,6 +126,8 @@ const Nav = () => {
                 to="/login"
                 onClick={() => {
                   localStorage.removeItem('TOKEN');
+                  localStorage.removeItem('MY_USER_ID');
+                  localStorage.removeItem('recentProduct');
                 }}
               >
                 로그아웃

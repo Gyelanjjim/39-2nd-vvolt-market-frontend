@@ -13,7 +13,10 @@ import { APIS } from '../../config';
 const ProductList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const currentCategory = searchParams.get('category') ?? '';
+  const [currentCategory, setCurrentCategory] = useState({
+    id: '',
+    name: '전체 상품',
+  });
 
   const [category, setCategory] = useState(currentCategory); // 카테고리 변수가 정해지면 searchPrams.get("category")로 변경
   const [currentLat, setCurrentLat] = useState(37.5062539); //37.5062539 선릉 위치
@@ -61,12 +64,13 @@ const ProductList = () => {
   }, []);
 
   useEffect(() => {
-    switch (currentCategory) {
-      case '지역 서비스':
+    switch (currentCategory.id) {
+      case 'region':
         fetch(`${APIS.ipAddress}/products`)
           .then(res => res.json())
           .then(result => {
-            const aroundItem = result.data.filter(obj => {
+            console.log(result);
+            const aroundItem = result.data.list.filter(obj => {
               const distance = getDistance(
                 currentLat,
                 currentlng,
@@ -74,12 +78,13 @@ const ProductList = () => {
                 Number(obj.lng)
               );
               if (distance < 4) {
+                // 4 km 이내
                 return obj;
               } else {
                 return null;
               }
             });
-            setItemList(aroundItem);
+            setItemList({ total: aroundItem.length, list: aroundItem });
           });
         break;
       case '':
@@ -90,7 +95,7 @@ const ProductList = () => {
           });
         break;
       default:
-        fetch(`${APIS.ipAddress}/products?category=${currentCategory}`)
+        fetch(`${APIS.ipAddress}/products?category=${currentCategory.id}`)
           .then(res => res.json())
           .then(result => {
             setItemList(result.data);
@@ -132,11 +137,25 @@ const ProductList = () => {
           </HomeIcon>
           <Selector
             onChange={e => {
-              setCategory(e.target.value);
-              searchParams.set('category', e.target.value);
+              const selectedId = e.target.value;
+
+              if (selectedId === '') {
+                setCurrentCategory({ id: '', name: '전체 상품' });
+              } else if (selectedId === 'region') {
+                setCurrentCategory({ id: 'region', name: '지역 서비스' });
+              } else {
+                const selected = categoryList.find(
+                  cat => String(cat.id) === selectedId
+                );
+                if (selected) {
+                  setCurrentCategory({ id: selected.id, name: selected.name });
+                }
+              }
+
+              searchParams.set('category', selectedId);
               setSearchParams(searchParams);
             }}
-            value={currentCategory}
+            value={currentCategory.id}
           >
             <CategoryOption value="">전체</CategoryOption>
             {categoryList.map(cat => (
@@ -144,18 +163,28 @@ const ProductList = () => {
                 {cat.name}
               </CategoryOption>
             ))}
-            <CategoryOption value="지역 서비스">지역 서비스</CategoryOption>
+            <CategoryOption value="region">지역 서비스</CategoryOption>
           </Selector>
         </CategorySelector>
-        <ListTitle>
-          {currentCategory === '' ? '전체 상품' : currentCategory}의 추천 상품
-        </ListTitle>
+        <ListTitle>{currentCategory.name}의 추천 상품</ListTitle>
         <WrapList>
-          {itemList &&
-            itemList.total &&
-            itemList.list.map((obj, index) => {
-              return <ListItem key={index} item={obj} />;
-            })}
+          {itemList && itemList.total > 0 ? (
+            itemList.list.map((obj, index) => (
+              <ListItem key={index} item={obj} />
+            ))
+          ) : (
+            <NoItemText>
+              {currentCategory.id === 'region' ? (
+                <>
+                  현재 위치 기준 <strong>4km 이내</strong>에서
+                  <br />
+                  판매 중인 상품이 없습니다.
+                </>
+              ) : (
+                <>판매 중인 상품이 없습니다.</>
+              )}
+            </NoItemText>
+          )}
         </WrapList>
       </WrapProductList>
     </WrapBody>
@@ -216,6 +245,15 @@ const WrapList = styled.div`
   flex-wrap: wrap;
   max-width: 1024px;
   margin-top: 10px;
+`;
+
+const NoItemText = styled.div`
+  width: 100%;
+  text-align: center;
+  padding: 80px 0;
+  font-size: 16px;
+  color: #666;
+  line-height: 1.6;
 `;
 
 export default ProductList;

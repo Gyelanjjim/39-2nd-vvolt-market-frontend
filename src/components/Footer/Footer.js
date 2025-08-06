@@ -1,9 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import variables from '../../styles/variables';
 
 const Footer = () => {
+  const navigate = useNavigate();
   return (
     <WrapFooter className="footer">
       <WrapLink className="wrapLink">
@@ -26,9 +27,9 @@ const Footer = () => {
               </ServiceLink>
               <ServiceLink
                 onClick={() => {
-                  localStorage.removeItem('TOKEN');
+                  localStorage.clear();
+                  navigate('/?category=');
                 }}
-                to="/login"
               >
                 로그아웃
               </ServiceLink>
@@ -43,7 +44,14 @@ const Footer = () => {
               >
                 판매하기
               </Button>
-              <ServiceLink to="/login">로그인</ServiceLink>
+              <ServiceLink
+                onClick={() => {
+                  window.location.reload();
+                }}
+                to="/login"
+              >
+                로그인
+              </ServiceLink>
             </>
           )}
         </LinkList>
