@@ -8,7 +8,7 @@ import { APIS } from '../../config';
 export default function Payment() {
   const navigate = useNavigate();
   // 받아올 데이터 값 관리
-  const [productList, setProductList] = useState([]);
+  const [productInfo, setProductList] = useState([]);
   const [userInfo, setUserInfo] = useState([]);
   //  배송 요청 사항 값 관리
   const [shippingStatus, setShippingStatus] = useState('');
@@ -42,9 +42,9 @@ export default function Payment() {
         .requestPayment('카드', {
           // 결제 수단
           // 결제 정보
-          amount: productList.productPrice,
+          amount: productInfo.price,
           orderId: `111111111111${productId}`,
-          orderName: productList.productName,
+          orderName: productInfo.name,
           customerName: userInfo.realName,
           successUrl: 'http://localhost:3000/success',
           failUrl: 'http://localhost:3000/',
@@ -69,7 +69,7 @@ export default function Payment() {
       .then(res => res.json())
       .then(data => {
         console.log(data);
-        setProductList(data.productDetailData.productDetail[0]);
+        setProductList(data.data.product);
       });
 
     fetch(`${APIS.ipAddress}/users/1`, {
@@ -94,12 +94,12 @@ export default function Payment() {
         <PaymentTitle>택배거래, 안전결제로 구매합니다.</PaymentTitle>
         <ProductInfo>
           <SelectProduct>
-            <ProductImg src={productList.images} />
+            <ProductImg src={productInfo.images[0].imageUrl} />
             <SelectProductInfo>
               <ProductPrice>
-                {Number(productList.productPrice).toLocaleString()}원
+                {Number(productInfo.price).toLocaleString()}원
               </ProductPrice>
-              <ProductName>{productList.productName}</ProductName>
+              <ProductName>{productInfo.name}</ProductName>
             </SelectProductInfo>
           </SelectProduct>
         </ProductInfo>
@@ -130,7 +130,7 @@ export default function Payment() {
           <AmountPriceWrap>
             <AmountPriceTitle>상품금액</AmountPriceTitle>
             <AmountPrice>
-              {Number(productList.productPrice).toLocaleString()}원
+              {Number(productInfo.price).toLocaleString()}원
             </AmountPrice>
           </AmountPriceWrap>
           <ShippingAmount>
@@ -140,7 +140,7 @@ export default function Payment() {
           <TotalAmount>
             <TotalAmountTitle>총금액</TotalAmountTitle>
             <TotalAmountPrice>
-              {Number(productList.productPrice).toLocaleString()}원
+              {Number(productInfo.price).toLocaleString()}원
             </TotalAmountPrice>
           </TotalAmount>
         </AmountWrap>
@@ -185,7 +185,8 @@ export default function Payment() {
         <PaymentAgreeBtn
           disabled={isdisabled}
           onClick={() => {
-            onClickHandler();
+            alert('서비스 준비 중입니다');
+            // onClickHandler();
           }}
         >
           결제하기
