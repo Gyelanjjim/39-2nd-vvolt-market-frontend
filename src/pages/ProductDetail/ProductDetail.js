@@ -12,6 +12,8 @@ import iconHeart from './../../assets/images/heart.png';
 import iconLocal from './../../assets/images/localicon.png';
 import { useParams } from 'react-router-dom';
 import { APIS } from '../../config';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ko'; // 한국어 표시
 
 export default function ProductDetail() {
   const [productInfo, setProductDetail] = useState();
@@ -31,6 +33,16 @@ export default function ProductDetail() {
 
   const productMore = () => {
     navigate(`/store/${storeInfo.id}`);
+  };
+
+  const getStatus = {
+    1: 'S급',
+    2: 'A급',
+    3: 'B급',
+  };
+
+  const getTimeGap = utcDateString => {
+    return dayjs.utc(utcDateString).tz('Asia/Seoul').fromNow();
   };
 
   useEffect(() => {
@@ -106,14 +118,14 @@ export default function ProductDetail() {
                 </StatusIcon>
                 <StatusIcon>
                   <StatusIconImg src={iconHour} />
-                  10분 전
+                  {getTimeGap(productInfo.createdAt)}
                 </StatusIcon>
               </StatusList>
 
               <DetailList>
                 <ListElement>
                   <ListElementTit>상품상태</ListElementTit>
-                  중고상품
+                  {getStatus[productInfo.status]}
                 </ListElement>
                 <ListElement>
                   <ListElementTit>거래지역</ListElementTit>
@@ -235,7 +247,7 @@ export default function ProductDetail() {
               </ProductInfo>
 
               <StoreInfo>
-                <StoreBox>
+                {/* <StoreBox>
                   <PdTitle>상점정보</PdTitle>
                   <StoreName>{storeInfo.nickName}</StoreName>
                   <StoreUl>
@@ -245,7 +257,9 @@ export default function ProductDetail() {
 
                   <StoreImgList>
                     <StoreImgLi>
-                      <StoreImg src={storeInfo.otherProducts[0].imageUrls[0]} />
+                      <StoreImg
+                        src={storeInfo.otherProducts[0]?.imageUrls[0]}
+                      />
                       <StorePrice>
                         {Number(
                           storeInfo.otherProducts[0].price
@@ -276,7 +290,49 @@ export default function ProductDetail() {
 
                 <StoreBtnWrap>
                   <StoreBtn onClick={purchaseLink}>바로구매</StoreBtn>
-                </StoreBtnWrap>
+                </StoreBtnWrap> */}
+                {storeInfo.otherProducts.length === 0 ? (
+                  <StoreBox>
+                    <PdTitle>상점정보</PdTitle>
+                    <StoreName>{storeInfo.nickName}</StoreName>
+                    <StoreUl>
+                      <StoreLi> 상품 {storeInfo.productCount}개 </StoreLi>
+                      <StoreLi> 팔로워 {storeInfo.followerCount} </StoreLi>
+                    </StoreUl>
+                    <div style={{ marginTop: '20px' }}>
+                      상품이 더이상 없습니다.
+                    </div>
+
+                    <StoreMoreBtn onClick={productMore}>상점 보기</StoreMoreBtn>
+                  </StoreBox>
+                ) : (
+                  <StoreBox>
+                    <PdTitle>상점정보</PdTitle>
+                    <StoreName>{storeInfo.nickName}</StoreName>
+                    <StoreUl>
+                      <StoreLi> 상품 {storeInfo.productCount}개 </StoreLi>
+                      <StoreLi> 팔로워 {storeInfo.followerCount} </StoreLi>
+                    </StoreUl>
+
+                    <StoreImgList>
+                      {storeInfo.otherProducts
+                        .slice(0, 2)
+                        .map((product, index) => (
+                          <StoreImgLi key={index}>
+                            <StoreImg src={product.imageUrls[0]} />
+                            <StorePrice>
+                              {Number(product.price).toLocaleString()}원
+                            </StorePrice>
+                          </StoreImgLi>
+                        ))}
+                    </StoreImgList>
+
+                    <StoreMoreBtn onClick={productMore}>
+                      <BtnRed>{storeInfo.productCount - 1}개</BtnRed> 상품
+                      더보기
+                    </StoreMoreBtn>
+                  </StoreBox>
+                )}
               </StoreInfo>
             </DetailWrap>
           </MainWrap>

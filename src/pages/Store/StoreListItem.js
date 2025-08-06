@@ -75,8 +75,12 @@ const ProductBottom = styled.div`
   margin: 10px 5%;
 `;
 const ProductName = styled.div`
+  width: 160px;
+  height: 25px;
   font-size: 14px;
   overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   line-height: 30px;
 `;
 const ProductInfo = styled.div`
@@ -106,6 +110,9 @@ const ProductLocation = styled.div`
   border-top: 1px solid rgb(238, 238, 238);
   font-size: 12px;
   font-weight: 400;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   color: #666;
 `;
 

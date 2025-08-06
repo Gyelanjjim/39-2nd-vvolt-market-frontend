@@ -1,6 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/ko'; // 한국어 표시
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(relativeTime);
+
+dayjs.locale('ko');
 
 const ListItem = ({ item }) => {
   const {
@@ -13,30 +24,10 @@ const ListItem = ({ item }) => {
     category,
     images,
     createdAt,
-    // productId,
-    // productName,
-    // productPrice,
-    // registerDate,
-    // location,
-    // images,
   } = item;
 
-  const getTimeGap = registerDate => {
-    const milliSeconds = new Date() - new Date(registerDate);
-    const seconds = milliSeconds / 1000;
-    if (seconds < 60) return `방금 전`;
-    const minutes = seconds / 60;
-    if (minutes < 60) return `${Math.floor(minutes)}분 전`;
-    const hours = minutes / 60;
-    if (hours < 24) return `${Math.floor(hours)}시간 전`;
-    const days = hours / 24;
-    if (days < 7) return `${Math.floor(days)}일 전`;
-    const weeks = days / 7;
-    if (weeks < 5) return `${Math.floor(weeks)}주 전`;
-    const months = days / 30;
-    if (months < 12) return `${Math.floor(months)}달 전`;
-    const years = days / 365;
-    return `${Math.floor(years)}년 전`;
+  const getTimeGap = utcDateString => {
+    return dayjs.utc(utcDateString).tz('Asia/Seoul').fromNow();
   };
 
   const setRecentProduct = () => {

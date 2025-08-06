@@ -1,5 +1,4 @@
-//const REST_API_KEY = process.env.REACT_APP_KAKAO_REST_API_KEY;
-const REST_API_KEY = 'cb5f489ed56b6d4ad4dadf12ea6d75f0';
+const REST_API_KEY = process.env.REACT_APP_KAKAO_REST_API_KEY;
 
 const REDIRECT_URI = 'http://localhost:3000/users/kakaoLogin';
 
