@@ -46,8 +46,10 @@ export default function Payment() {
           orderId: `111111111111${productId}`,
           orderName: productInfo.name,
           customerName: userInfo.realName,
-          successUrl: 'http://localhost:3000/success',
-          failUrl: 'http://localhost:3000/',
+          // successUrl: 'http://localhost:3000/success',
+          successUrl: 'https://vvolt-market.kr/success',
+          // failUrl: 'http://localhost:3000/',
+          failUrl: 'https://vvolt-market.kr/',
           flowMode: 'DIRECT',
           easyPay: '토스페이',
         })
