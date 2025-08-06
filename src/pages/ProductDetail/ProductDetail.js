@@ -284,8 +284,12 @@ export default function ProductDetail() {
                     </StoreImgList>
 
                     <StoreMoreBtn onClick={productMore}>
-                      <BtnRed>{storeInfo.productCount - 1}개</BtnRed> 상품
-                      더보기
+                      <BtnRed>
+                        {storeInfo.productCount -
+                          Math.min(storeInfo.otherProducts.length, 2)}
+                        개
+                      </BtnRed>
+                      상품 더보기
                     </StoreMoreBtn>
                   </StoreBox>
                 )}
