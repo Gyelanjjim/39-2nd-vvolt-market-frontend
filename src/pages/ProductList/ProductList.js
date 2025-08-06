@@ -175,8 +175,8 @@ const ProductList = () => {
         </ListTitle>
         <WrapList>
           {itemList &&
-            itemList.length &&
-            itemList.map((obj, index) => {
+            itemList.total &&
+            itemList.list.map((obj, index) => {
               return <ListItem key={index} item={obj} />;
             })}
         </WrapList>

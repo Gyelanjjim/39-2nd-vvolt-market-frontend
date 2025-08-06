@@ -39,7 +39,7 @@ export default function SideBar() {
             return (
               <ProductImg
                 onClick={() => {
-                  navigate(`/productdetail/${obj.productId}`);
+                  navigate(`/productdetail/${obj.id}`);
                 }}
                 key={index}
                 src={obj.images[0].imageUrl}

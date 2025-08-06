@@ -25,7 +25,7 @@ const Nav = () => {
     })
       .then(response => response.json())
       .then(data => {
-        console.log('유저정보 응답:', data);
+        // console.log('유저정보 응답:', data);
         if (data?.data?.myData) {
           setUserId(data.data.myData.writerId);
         }
@@ -69,7 +69,7 @@ const Nav = () => {
                   return (
                     <SearchedList
                       onClick={() => {
-                        navigate(`/productdetail/${obj.productId}`);
+                        navigate(`/productdetail/${obj.id}`);
                       }}
                     >
                       {obj.productName}

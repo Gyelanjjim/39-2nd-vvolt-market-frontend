@@ -5,21 +5,7 @@ import { format, register } from 'timeago.js';
 import koLocale from 'timeago.js/lib/lang/ko'; // 한글로 변환
 register('ko', koLocale);
 const StoreListItem = ({ item, curruntMenu }) => {
-  const {
-    id,
-    name,
-    price,
-    location,
-    category,
-    images,
-    createdAt,
-    // productId,
-    // productName,
-    // productPrice,
-    // registerDate,
-    // location,
-    // images,
-  } = item;
+  const { id, name, price, location, category, images, createdAt } = item;
 
   return (
     <Product>

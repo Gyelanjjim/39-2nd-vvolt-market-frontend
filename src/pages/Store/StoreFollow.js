@@ -19,22 +19,45 @@ export default function StoreFollow({ curruntMenu, userId }) {
       fetch(`${APIS.ipAddress}/follow/follower/${userId}`)
         .then(res => res.json())
         .then(result => {
-          console.log(`result`, result);
+          // console.log(`result`, result);
           setFollowList(result.data);
         });
     }
   }, []);
+
+  const emptyMessage =
+    curruntMenu === '팔로잉'
+      ? '팔로잉한 사용자가 없습니다.'
+      : '아직 팔로워가 없습니다.';
+
   return (
     <WrapStoreFollow>
-      {followList &&
-        followList.length &&
-        followList.map((obj, index) => {
-          return <FollowUser key={index} followInfo={obj}></FollowUser>;
-        })}
+      {Array.isArray(followList) && followList.length ? (
+        followList.map((obj, index) => (
+          <FollowUser key={index} followInfo={obj} />
+        ))
+      ) : (
+        <EmptyText>{emptyMessage}</EmptyText>
+      )}
     </WrapStoreFollow>
   );
 }
+// const WrapStoreFollow = styled.div`
+//   display: flex;
+//   flex-wrap: wrap;
+// `;
+
 const WrapStoreFollow = styled.div`
   display: flex;
   flex-wrap: wrap;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+`;
+
+const EmptyText = styled.p`
+  font-size: 16px;
+  color: #888;
+  text-align: center;
 `;

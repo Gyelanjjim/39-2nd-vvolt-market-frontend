@@ -82,7 +82,8 @@ export default function StoreReviews({ myData, userId }) {
           />
           <ReviewBtn
             onClick={e => {
-              addReview(e);
+              // addReview(e);
+              alert('서비스 준비 중입니다.');
             }}
           >
             리뷰등록

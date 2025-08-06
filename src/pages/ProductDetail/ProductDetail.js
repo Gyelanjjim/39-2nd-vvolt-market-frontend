@@ -15,6 +15,7 @@ import { APIS } from '../../config';
 
 export default function ProductDetail() {
   const [productInfo, setProductDetail] = useState();
+  const [productNotFound, setProductNotFound] = useState(false);
   const [storeInfo, setStoreInfo] = useState();
   const params = useParams();
   const productId = params.id;
@@ -29,7 +30,7 @@ export default function ProductDetail() {
   };
 
   const productMore = () => {
-    navigate(`/store/${storeInfo[0].storeId}`);
+    navigate(`/store/${storeInfo.id}`);
   };
 
   useEffect(() => {
@@ -40,8 +41,15 @@ export default function ProductDetail() {
       // fetch('/data/productDetail.json') //mockdata
       .then(res => res.json())
       .then(data => {
-        const { product, store, reviews, isLiked, likeCount } = data.data;
-        product.likeCount = likeCount;
+        if (data.code !== 'S200') {
+          setProductNotFound(true); // 🚫 렌더링 막기 위한 상태 변경
+          const list = JSON.parse(localStorage.getItem('recentProduct')).filter(
+            v => v.id !== productId
+          );
+          localStorage.setItem('recentProduct', JSON.stringify(list));
+          return;
+        }
+        const { product, store, reviews, isLiked } = data.data;
         setProductDetail(product);
         setStoreInfo(store);
         setIsActive(isLiked);
@@ -49,6 +57,19 @@ export default function ProductDetail() {
   }, []);
 
   const [isActive, setIsActive] = useState();
+
+  if (productNotFound) {
+    return (
+      <WrapProductDetail>
+        <div style={{ textAlign: 'center', padding: '100px 0' }}>
+          <h2>🚫 해당 상품이 존재하지 않습니다.</h2>
+          <MainGoButton onClick={() => navigate('/?category=')}>
+            메인으로 가기
+          </MainGoButton>
+        </div>
+      </WrapProductDetail>
+    );
+  }
 
   return (
     <>
@@ -222,27 +243,35 @@ export default function ProductDetail() {
                     <StoreLi> 팔로워 {storeInfo.followerCount} </StoreLi>
                   </StoreUl>
 
-                  {/* <StoreImgList>
+                  <StoreImgList>
                     <StoreImgLi>
-                      <StoreImg src={storeInfo.userImage} />
+                      <StoreImg src={storeInfo.otherProducts[0].imageUrls[0]} />
                       <StorePrice>
-                        {Number(storeInfo[0].price).toLocaleString()}원
+                        {Number(
+                          storeInfo.otherProducts[0].price
+                        ).toLocaleString()}
+                        원
                       </StorePrice>
                     </StoreImgLi>
-                    {storeInfo[1] && (
+                    {storeInfo.otherProducts[1] && (
                       <StoreImgLi>
-                        <StoreImg src={storeInfo[1].images[0]} />
+                        <StoreImg
+                          src={storeInfo.otherProducts[1].imageUrls[0]}
+                        />
                         <StorePrice>
-                          {Number(storeInfo[1].price).toLocaleString()}원
+                          {Number(
+                            storeInfo.otherProducts[1].price
+                          ).toLocaleString()}
+                          원
                         </StorePrice>
                       </StoreImgLi>
                     )}
                   </StoreImgList>
 
                   <StoreMoreBtn onClick={productMore}>
-                    <BtnRed>{storeInfo[0].productCount - 2}개 </BtnRed>
+                    <BtnRed>{storeInfo.productCount - 1}개 </BtnRed>
                     상품 더보기
-                  </StoreMoreBtn> */}
+                  </StoreMoreBtn>
                 </StoreBox>
 
                 <StoreBtnWrap>
@@ -258,6 +287,7 @@ export default function ProductDetail() {
 }
 const WrapProductDetail = styled.div`
   padding-top: 150px;
+  min-height: calc(100vh - 150px);
 `;
 const MainWrap = styled.div`
   margin: 80px auto;
@@ -534,4 +564,10 @@ const DeleteButton = styled.button`
     background-color: #cc0000;
     color: #fff;
   }
+`;
+
+const MainGoButton = styled(StoreBtn)`
+  width: 200px;
+  margin: 40px auto 0;
+  display: block;
 `;
