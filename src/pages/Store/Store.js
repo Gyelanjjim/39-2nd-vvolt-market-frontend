@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import ReactStars from 'react-stars';
+import { StarRating } from 'react-flexible-star-rating';
 import { useParams } from 'react-router-dom';
 import { APIS } from '../../config';
 import variables from '../../styles/variables';
@@ -102,7 +102,7 @@ export default function Store() {
     formData.append('image', event.target.files[0]);
 
     //이미지 수정 formData 보내기
-    console.log(formData);
+    // console.log(formData);
     fetch(`${APIS.ipAddress}/users/me`, {
       method: 'put',
       headers: {
@@ -112,7 +112,7 @@ export default function Store() {
     })
       .then(res => {
         if (res.status === 200) {
-          console.log('이미지 수정 성공');
+          // console.log('이미지 수정 성공');
           //프론트상에서 이미지 변경
           setFileImage(URL.createObjectURL(event.target.files[0]));
         } else {
@@ -133,12 +133,16 @@ export default function Store() {
                 <ProfileImg src={fileImage} />
                 <StoreName>{storeData.sellerName}</StoreName>
                 <StoreScore>
-                  <ReactStars
-                    count={5}
-                    size={18}
-                    value={Number(storeData.starAVG)}
-                    edit={false}
-                  />
+                  <StarRatingWrapper>
+                    <StarRating
+                      initialRating={Number(storeData.starAVG)} // 별점 평균
+                      numberOfStars={5} // ⭐ 전체 별 개수
+                      isHalfRatingEnabled={true} // 반 개별 허용 여부
+                      starDimension="24px" // 크기 (px 단위 문자열)
+                      isReadOnly={true} // 수정 불가
+                      activeColor="#ffd700"
+                    />
+                  </StarRatingWrapper>
                 </StoreScore>
                 <StoreSummary>
                   상품 {Number(storeData.onSaleNum)} | 팔로워{' '}
@@ -618,4 +622,12 @@ const MenuContent = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin-top: 20px;
+`;
+
+const StarRatingWrapper = styled.div`
+  width: fit-content;
+  svg {
+    width: 24px;
+    height: 24px;
+  }
 `;

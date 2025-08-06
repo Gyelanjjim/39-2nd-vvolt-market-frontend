@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import ReactStars from 'react-stars';
+import { StarRating } from 'react-flexible-star-rating';
 
 import variables from '../../styles/variables';
 import { useNavigate } from 'react-router-dom';
@@ -20,7 +20,15 @@ const StoreEachReview = ({ reviewInfo }) => {
         />
         <WrapNameScore>
           <WriterName>{writerName}</WriterName>
-          <ReactStars count={5} size={18} value={rate} edit={false} />
+          <StarRatingWrapper>
+            <StarRating
+              initialRating={rate}
+              isRatingReadOnly={true} // 별점 읽기 전용
+              numberOfStars={5} // ⭐ 전체 별 개수
+              starDimension="24px" // 별 크기
+              activeColor="#ffd700" // 활성 별 색상
+            />
+          </StarRatingWrapper>
         </WrapNameScore>
       </WrapReviewTop>
       <ReviewContent>{reviewContent}</ReviewContent>
@@ -55,4 +63,11 @@ const WriterName = styled.div`
 `;
 const ReviewContent = styled.div`
   margin: 20px 10px;
+`;
+const StarRatingWrapper = styled.div`
+  width: fit-content;
+  svg {
+    width: 24px;
+    height: 24px;
+  }
 `;

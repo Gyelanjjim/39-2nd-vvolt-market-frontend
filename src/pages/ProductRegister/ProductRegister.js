@@ -15,7 +15,7 @@ export default function ProductRegister() {
     latitude: 0,
     longitude: 0,
     product_status_id: '',
-    price: 0,
+    price: '0',
     description: '',
   });
 
@@ -131,7 +131,7 @@ export default function ProductRegister() {
 
   const [charCount, setCharCount] = useState(0);
 
-  const [userLocation, setUserLocation] = useState();
+  const [userLocation, setUserLocation] = useState('');
 
   //서버에 저장된 user 주소
   const getUserAddress = () => {
@@ -187,7 +187,7 @@ export default function ProductRegister() {
   };
 
   //가격 콤마 찍기
-  const [enteredNum, setEnterdNum] = useState();
+  const [enteredNum, setEnterdNum] = useState('');
 
   const changeEnteredNum = e => {
     const value = e.target.value;

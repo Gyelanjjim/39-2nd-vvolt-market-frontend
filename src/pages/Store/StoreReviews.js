@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import ReactStars from 'react-stars';
+import { StarRating } from 'react-flexible-star-rating';
 import variables from '../../styles/variables';
 import StoreEachReview from './StroeEachReivew';
 import { APIS } from '../../config';
@@ -20,46 +20,47 @@ export default function StoreReviews({ myData, userId }) {
     fetch(`${APIS.ipAddress}/review/${userId}`)
       .then(res => res.json())
       .then(result => {
-        console.log(result.review_list);
+        // console.log(result.review_list);
         setReviewList(result.review_list);
       });
   }, []);
 
-  const addReview = e => {
-    if (reviewList) {
-      const prevReview = [...reviewList];
-      prevReview.unshift({
-        writerImg: myData.writerImg,
-        writerName: myData.writerName,
-        rate: registerScore,
-        reviewContent: registerReview,
-      });
-      //리뷰추가
-      fetch(`${APIS.ipAddress}/review`, {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json;charset=utf-8',
-          authorization: localStorage.getItem('TOKEN'),
-        },
-        body: JSON.stringify({
-          productId: 43,
-          userId: userId,
-          rating: registerScore,
-          contents: registerReview,
-        }),
-      })
-        .then(res => {
-          if (res.status === 201) {
-            setReviewList(prevReview);
-            setRegisterReview('');
-            setRegisterScore(0.5);
-          } else {
-            throw new Error('리뷰추가에 실패하였습니다.');
-          }
-        })
-        .catch(error => alert(error));
-    }
-  };
+  // 나중에 재검토
+  // const addReview = e => {
+  //   if (reviewList) {
+  //     const prevReview = [...reviewList];
+  //     prevReview.unshift({
+  //       writerImg: myData.writerImg,
+  //       writerName: myData.writerName,
+  //       rate: registerScore,
+  //       reviewContent: registerReview,
+  //     });
+  //     //리뷰추가
+  //     fetch(`${APIS.ipAddress}/review`, {
+  //       method: 'post',
+  //       headers: {
+  //         'Content-Type': 'application/json;charset=utf-8',
+  //         authorization: localStorage.getItem('TOKEN'),
+  //       },
+  //       body: JSON.stringify({
+  //         productId: 43,
+  //         userId: userId,
+  //         rating: registerScore,
+  //         contents: registerReview,
+  //       }),
+  //     })
+  //       .then(res => {
+  //         if (res.status === 201) {
+  //           setReviewList(prevReview);
+  //           setRegisterReview('');
+  //           setRegisterScore(0.5);
+  //         } else {
+  //           throw new Error('리뷰추가에 실패하였습니다.');
+  //         }
+  //       })
+  //       .catch(error => alert(error));
+  //   }
+  // };
 
   return (
     <WrapReviews>
@@ -71,15 +72,18 @@ export default function StoreReviews({ myData, userId }) {
           value={registerReview}
         />
         <WrapReviewBtn>
-          <ReactStars
-            onChange={e => {
-              setRegisterScore(e);
-            }}
-            count={5}
-            size={18}
-            color2={'#ffd700'}
-            value={registerScore}
-          />
+          <StarRatingWrapper>
+            <StarRating
+              onRatingChange={e => {
+                setRegisterScore(e.rating); // e.rating: 선택된 별점 (1~5)
+              }}
+              initialRating={registerScore} // 현재 값
+              numberOfStars={5} // ⭐ 전체 별 개수
+              isHalfRatingEnabled={true} // 반 개별 허용
+              starDimension="24px" // 크기
+              activeColor="#ffd700" // 활성화된 별 색상
+            />
+          </StarRatingWrapper>
           <ReviewBtn
             onClick={e => {
               // addReview(e);
@@ -125,4 +129,11 @@ const ReviewBtn = styled.div`
 `;
 const WrapReviewList = styled.div`
   margin-top: 30px;
+`;
+const StarRatingWrapper = styled.div`
+  width: fit-content;
+  svg {
+    width: 24px;
+    height: 24px;
+  }
 `;

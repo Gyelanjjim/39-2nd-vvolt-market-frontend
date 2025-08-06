@@ -13,7 +13,7 @@ import { APIS } from '../../config';
 const ProductList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const currentCategory = searchParams.get('category');
+  const currentCategory = searchParams.get('category') ?? '';
 
   const [category, setCategory] = useState(currentCategory); // 카테고리 변수가 정해지면 searchPrams.get("category")로 변경
   const [currentLat, setCurrentLat] = useState(37.5062539); //37.5062539 선릉 위치

@@ -21,6 +21,20 @@ export default function Signup() {
   const [lat, setLat] = useState();
   const [long, setLong] = useState();
 
+  useEffect(() => {
+    const REST_API_KEY = process.env.REACT_APP_KAKAO_REST_API_KEY;
+
+    if (!window.kakao || !window.kakao.maps) {
+      const script = document.createElement('script');
+      script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${REST_API_KEY}&libraries=services`;
+      script.async = true;
+      script.onload = () => {
+        console.log('✅ Kakao Maps SDK 로드 완료');
+      };
+      document.head.appendChild(script);
+    }
+  }, []);
+
   const handleAddress = (fullAddr, zipCode) => {
     let geocoder = new kakao.maps.services.Geocoder();
     let callback = function (result, status) {
