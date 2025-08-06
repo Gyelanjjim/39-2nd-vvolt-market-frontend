@@ -1,23 +1,43 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import variables from '../../styles/variables';
+import axios from 'axios';
+import { APIS } from '../../config';
 
 const Footer = () => {
-  const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('TOKEN'));
+  const [categoryList, setCategoryList] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await axios.get(`${APIS.ipAddress}/categories`);
+        setCategoryList(res.data.data);
+      } catch (error) {
+        console.error('카테고리 불러오기 실패:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   return (
     <WrapFooter className="footer">
       <WrapLink className="wrapLink">
         <LinkList className="linkList">
           <Category>CATEGORY LIST</Category>
-          {CATEGORY_LIST.map((obj, index) => {
-            return (
-              <CategoryLink key={index} className="link" to={obj.link}>
-                {obj.pageName}
-              </CategoryLink>
-            );
-          })}
+          <CategoryLink className="link" to="/?category=">
+            전체 상품
+          </CategoryLink>
+          {categoryList.map((obj, index) => (
+            <CategoryLink
+              key={index}
+              className="link"
+              to={`/?category=${obj.id}`}
+            >
+              {obj.name}
+            </CategoryLink>
+          ))}
         </LinkList>
         <LinkList className="linkList">
           <Service>SERVICE</Service>
@@ -229,24 +249,5 @@ const PROFILE_LIST = [
     img: '/images/profile_img_7.png',
     position: 'Back-end',
     github: 'https://github.com/Gyelanjjim',
-  },
-];
-
-const CATEGORY_LIST = [
-  {
-    pageName: '전체 상품',
-    link: '/?category=',
-  },
-  {
-    pageName: '의류',
-    link: '/?category=의류',
-  },
-  {
-    pageName: '전자기기',
-    link: '/?category=전자기기',
-  },
-  {
-    pageName: '액세서리',
-    link: '/?category=액세서리',
   },
 ];

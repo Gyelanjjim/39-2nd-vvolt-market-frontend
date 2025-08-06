@@ -44,6 +44,21 @@ const ProductList = () => {
   };
 
   useEffect(() => {
+    const selectedId = searchParams.get('category');
+
+    if (selectedId === 'region') {
+      setCurrentCategory({ id: 'region', name: '지역 서비스' });
+    } else if (selectedId) {
+      const found = categoryList.find(cat => String(cat.id) === selectedId);
+      if (found) {
+        setCurrentCategory({ id: String(found.id), name: found.name });
+      }
+    } else {
+      setCurrentCategory({ id: '', name: '전체 상품' });
+    }
+  }, [searchParams, categoryList]);
+
+  useEffect(() => {
     // 현재위치 구하는 메소드
     navigator.geolocation.getCurrentPosition(pos => {
       if (pos.coords.latitude && pos.coords.lngitude) {

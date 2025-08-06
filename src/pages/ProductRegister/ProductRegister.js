@@ -21,6 +21,8 @@ export default function ProductRegister() {
   const [titleCharCount, setTitleCharCount] = useState(0);
   const [descCharCount, setDescCharCount] = useState(0);
   const [showTooltip, setShowTooltip] = useState(false);
+  //가격 콤마 찍기
+  const [enteredNum, setEnterdNum] = useState('');
 
   const {
     name,
@@ -84,13 +86,16 @@ export default function ProductRegister() {
   const handleProductInfo = event => {
     const { name, value } = event.target;
 
-    if (name === 'price') {
-      const numericValue = value.replace(/[^0-9]/g, ''); // 숫자만 추출
-      const noLeadingZero = String(Number(numericValue)); // 숫자로 변환 후 다시 문자열로 변환 (앞 0 제거)
-      setProductInfo(prev => ({ ...prev, [name]: noLeadingZero }));
-    } else {
-      setProductInfo(prev => ({ ...prev, [name]: value }));
-    }
+    // if (name === 'price') {
+    //   const numericValue = value.replace(/[^0-9]/g, ''); // 숫자만 추출
+    //   const noLeadingZero = String(Number(numericValue)); // 숫자로 변환 후 다시 문자열로 변환 (앞 0 제거)
+    //   setProductInfo(prev => ({ ...prev, [name]: noLeadingZero }));
+    // } else {
+    //   setProductInfo(prev => ({ ...prev, [name]: value }));
+    // }
+    if (name === 'price') return; // 🔥 price는 changeEnteredNum에서만 처리
+
+    setProductInfo(prev => ({ ...prev, [name]: value }));
   };
 
   const validateForm = () => {
@@ -240,14 +245,15 @@ export default function ProductRegister() {
     });
   };
 
-  //가격 콤마 찍기
-  const [enteredNum, setEnterdNum] = useState('');
+  const MAX_PRICE = 99999999;
 
   const changeEnteredNum = e => {
-    const value = e.target.value.replace(/[^0-9]/g, '');
-    const numericValue = String(Number(value)); // 0 제거
-    setEnterdNum(Number(numericValue).toLocaleString()); // 콤마 추가 표시용
-    setProductInfo(prev => ({ ...prev, price: numericValue }));
+    const raw = e.target.value.replace(/[^0-9]/g, '');
+    const numeric = Number(raw);
+    const limited = Math.min(numeric, MAX_PRICE);
+
+    setEnterdNum(limited.toLocaleString());
+    setProductInfo(prev => ({ ...prev, price: limited }));
   };
 
   return (

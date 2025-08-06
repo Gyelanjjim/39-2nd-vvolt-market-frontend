@@ -247,50 +247,6 @@ export default function ProductDetail() {
               </ProductInfo>
 
               <StoreInfo>
-                {/* <StoreBox>
-                  <PdTitle>상점정보</PdTitle>
-                  <StoreName>{storeInfo.nickName}</StoreName>
-                  <StoreUl>
-                    <StoreLi> 상품 {storeInfo.productCount}개 </StoreLi>
-                    <StoreLi> 팔로워 {storeInfo.followerCount} </StoreLi>
-                  </StoreUl>
-
-                  <StoreImgList>
-                    <StoreImgLi>
-                      <StoreImg
-                        src={storeInfo.otherProducts[0]?.imageUrls[0]}
-                      />
-                      <StorePrice>
-                        {Number(
-                          storeInfo.otherProducts[0].price
-                        ).toLocaleString()}
-                        원
-                      </StorePrice>
-                    </StoreImgLi>
-                    {storeInfo.otherProducts[1] && (
-                      <StoreImgLi>
-                        <StoreImg
-                          src={storeInfo.otherProducts[1].imageUrls[0]}
-                        />
-                        <StorePrice>
-                          {Number(
-                            storeInfo.otherProducts[1].price
-                          ).toLocaleString()}
-                          원
-                        </StorePrice>
-                      </StoreImgLi>
-                    )}
-                  </StoreImgList>
-
-                  <StoreMoreBtn onClick={productMore}>
-                    <BtnRed>{storeInfo.productCount - 1}개 </BtnRed>
-                    상품 더보기
-                  </StoreMoreBtn>
-                </StoreBox>
-
-                <StoreBtnWrap>
-                  <StoreBtn onClick={purchaseLink}>바로구매</StoreBtn>
-                </StoreBtnWrap> */}
                 {storeInfo.otherProducts.length === 0 ? (
                   <StoreBox>
                     <PdTitle>상점정보</PdTitle>
