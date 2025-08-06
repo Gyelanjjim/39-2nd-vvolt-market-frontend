@@ -243,7 +243,14 @@ export default function ProductDetail() {
             <DetailWrap>
               <ProductInfo>
                 <PdTitle>상품정보</PdTitle>
-                <PdText> {productInfo.description} </PdText>
+                <PdText>
+                  {productInfo.description.split('\n').map((line, idx) => (
+                    <React.Fragment key={idx}>
+                      {line}
+                      <br />
+                    </React.Fragment>
+                  ))}
+                </PdText>
               </ProductInfo>
 
               <StoreInfo>
