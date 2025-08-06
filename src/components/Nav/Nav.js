@@ -43,12 +43,13 @@ const Nav = () => {
         </MainLogo>
 
         <SearchArea>
-          <WrapSearch>
+          <WrapSearch onClick={() => alert('서비스 준비 중입니다')}>
             <SearchInput
               type="text"
               placeholder="상품명, 지역명, @상점명 입력"
               value={searchInput}
               onChange={e => setSearchInput(e.target.value)}
+              readOnly
             ></SearchInput>
             <SearchIcon
               src="/images/searchicon.png"
