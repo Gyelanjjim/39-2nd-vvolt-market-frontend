@@ -12,28 +12,25 @@ import { APIS } from '../../config';
 
 const Nav = () => {
   const navigate = useNavigate();
-  const [userId, setUserId] = useState(1);
   const [itemList, setItemList] = useState();
   const [searchInput, setSearchInput] = useState();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
 
   const isLoginCheck = !!localStorage.getItem('TOKEN');
+  const userId = localStorage.getItem('MY_USER_ID');
 
   useEffect(() => {
-    fetch(`${APIS.ipAddress}/users/1`, {
-      headers: { authorization: localStorage.getItem('TOKEN') },
-    })
-      .then(response => response.json())
-      .then(data => {
-        // console.log('유저정보 응답:', data);
-        if (data?.data?.myData) {
-          setUserId(data.data.myData.writerId);
-        }
-      });
     fetch(`${APIS.ipAddress}/products`)
       .then(res => res.json())
       .then(result => {
         setItemList(result);
+      });
+    // 🔽 카테고리 요청
+    fetch(`${APIS.ipAddress}/categories`)
+      .then(res => res.json())
+      .then(result => {
+        setCategories(result.data);
       });
   }, []);
   return (
@@ -165,24 +162,16 @@ const Nav = () => {
                   <DropBoxCt to="/?category=">전체</DropBoxCt>
                 </DropBoxCtHead>
 
-                <DropBoxCtHead>
-                  <DropBoxCt to="/?category=의류">의류</DropBoxCt>
-                </DropBoxCtHead>
+                {categories.map(cat => (
+                  <DropBoxCtHead key={cat.id}>
+                    <DropBoxCt to={`/?category=${cat.id}`}>
+                      {cat.name}
+                    </DropBoxCt>
+                  </DropBoxCtHead>
+                ))}
 
                 <DropBoxCtHead>
-                  <DropBoxCt to="/?category=액세서리">액세서리</DropBoxCt>
-                </DropBoxCtHead>
-
-                <DropBoxCtHead>
-                  <DropBoxCt to="/?category=전자기기">전자기기</DropBoxCt>
-                </DropBoxCtHead>
-
-                <DropBoxCtHead>
-                  <DropBoxCt to="/?category=기타">기타</DropBoxCt>
-                </DropBoxCtHead>
-
-                <DropBoxCtHead>
-                  <DropBoxCt to="/?category=지역+서비스">지역 서비스</DropBoxCt>
+                  <DropBoxCt to="/?category=region">지역 서비스</DropBoxCt>
                 </DropBoxCtHead>
               </DropBoxUl>
             </DropBox>
