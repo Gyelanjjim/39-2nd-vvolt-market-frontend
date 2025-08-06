@@ -54,7 +54,7 @@ export default function ProductDetail() {
         setStoreInfo(store);
         setIsActive(isLiked);
       });
-  }, []);
+  }, [productId]);
 
   const [isActive, setIsActive] = useState();
 
