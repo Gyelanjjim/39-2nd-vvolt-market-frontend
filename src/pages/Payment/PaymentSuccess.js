@@ -40,7 +40,8 @@ const PaymentSuccess = () => {
 
     let options = {
       method: 'POST',
-      url: 'http://localhost:10101/tossPayment/confirm',
+      // url: 'http://localhost:10101/tossPayment/confirm',
+      url: 'https://vvolt-market.kr/tossPayment/confirm',
       headers: {
         Authorization: `Basic dGVzdF9za19PQUxuUXZEZDJWSmw0OWxSbGphOE1qN1g0MW1OOg`,
         'Content-Type': 'application/json',
