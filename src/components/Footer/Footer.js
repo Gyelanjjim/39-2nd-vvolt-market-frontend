@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import variables from '../../styles/variables';
 
 const Footer = () => {
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('TOKEN'));
   return (
     <WrapFooter className="footer">
       <WrapLink className="wrapLink">
@@ -28,7 +29,7 @@ const Footer = () => {
               <ServiceLink
                 onClick={() => {
                   localStorage.clear();
-                  navigate('/?category=');
+                  window.location.href = '/?category=';
                 }}
               >
                 로그아웃
