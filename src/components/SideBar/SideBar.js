@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import qrimg from './../../assets/images/qrcode.png';
 
 export default function SideBar() {
   const navigate = useNavigate();
+  const location = useLocation();
   const scrollToTop = () => {
     window.scroll({
       top: 0,
@@ -13,13 +14,13 @@ export default function SideBar() {
   };
 
   const [recentProduct, setRecentProduct] = useState([]);
+
   useEffect(() => {
-    //로컬 스토리지 불러오기
-    if (localStorage.getItem('recentProduct')) {
-      const products = JSON.parse(localStorage.getItem('recentProduct'));
-      setRecentProduct(products);
+    const data = localStorage.getItem('recentProduct');
+    if (data) {
+      setRecentProduct(JSON.parse(data));
     }
-  }, []);
+  }, [location.pathname]);
 
   return (
     <SidebarWrap>

@@ -47,17 +47,6 @@ export default function StoreProducts({ curruntMenu, userId }) {
 
   const isEmpty = !itemList || itemList.total === 0;
 
-  // return (
-  //   <WrapStoreProducts>
-  //     {itemList &&
-  //       itemList.total &&
-  //       itemList.list.map((obj, index) => {
-  //         return (
-  //           <StoreListItem key={index} item={obj} curruntMenu={curruntMenu} />
-  //         );
-  //       })}
-  //   </WrapStoreProducts>
-  // );
   return (
     <WrapStoreProducts isEmpty={isEmpty}>
       {!isEmpty ? (

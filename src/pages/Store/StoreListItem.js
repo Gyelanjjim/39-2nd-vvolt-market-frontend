@@ -7,10 +7,30 @@ register('ko', koLocale);
 const StoreListItem = ({ item, curruntMenu }) => {
   const { id, name, price, location, category, images, createdAt } = item;
 
+  const setRecentProduct = () => {
+    if (!localStorage.getItem('recentProduct')) {
+      const recentProduct = [];
+      recentProduct.unshift(item);
+      localStorage.setItem('recentProduct', JSON.stringify(recentProduct));
+    } else {
+      const recentProduct = JSON.parse(localStorage.getItem('recentProduct'));
+      recentProduct.unshift(item);
+      const map = new Map(); // 맵
+      for (const character of recentProduct) {
+        map.set(JSON.stringify(character), character); // value가 모두 같은 객체 요소를 제외한 맵 생성
+      }
+      const unique = [...map.values()];
+      if (unique.length > 3) {
+        unique.pop();
+      }
+      localStorage.setItem('recentProduct', JSON.stringify(unique));
+    }
+  };
+
   return (
     <Product>
       {item && (
-        <ProductLink to={`/productDetail/${id}`}>
+        <ProductLink onClick={setRecentProduct} to={`/productDetail/${id}`}>
           {curruntMenu !== '구매내역' ? (
             <ProductImg src={images[0]?.imageUrl} alt="productImg" />
           ) : (
