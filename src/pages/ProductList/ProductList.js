@@ -19,6 +19,7 @@ const ProductList = () => {
   const [currentLat, setCurrentLat] = useState(37.5062539); //37.5062539 선릉 위치
   const [currentlng, setCurrentLng] = useState(127.0538496); //127.0538496
   const [itemList, setItemList] = useState();
+  const [categoryList, setCategoryList] = useState([]);
 
   const getDistance = (lat1, lng1, lat2, lng2) => {
     function deg2rad(deg) {
@@ -51,77 +52,52 @@ const ProductList = () => {
   }, []);
 
   useEffect(() => {
-    // 처음 카테고리 데이터 fetch
-    // 첫 카테고리가 지역서비스가 아닐 때
-    if (currentCategory !== '지역 서비스') {
-      // //mock data fetch
-      // fetch('/data/productsInfo.json')
-      //   .then(res => res.json())
-      //   .then(result => {
-      //     setItemList(result);
-      //   });
-      if (currentCategory === '') {
+    fetch(`${APIS.ipAddress}/categories`)
+      .then(res => res.json())
+      .then(data => setCategoryList(data.data))
+      .catch(err => {
+        console.error('카테고리 목록 가져오기 실패:', err);
+      });
+  }, []);
+
+  useEffect(() => {
+    switch (currentCategory) {
+      case '지역 서비스':
+        fetch(`${APIS.ipAddress}/products`)
+          .then(res => res.json())
+          .then(result => {
+            const aroundItem = result.data.filter(obj => {
+              const distance = getDistance(
+                currentLat,
+                currentlng,
+                Number(obj.lat),
+                Number(obj.lng)
+              );
+              if (distance < 4) {
+                return obj;
+              } else {
+                return null;
+              }
+            });
+            setItemList(aroundItem);
+          });
+        break;
+      case '':
         fetch(`${APIS.ipAddress}/products`)
           .then(res => res.json())
           .then(result => {
             setItemList(result.data);
           });
-      } else {
+        break;
+      default:
         fetch(`${APIS.ipAddress}/products?category=${currentCategory}`)
           .then(res => res.json())
           .then(result => {
             setItemList(result.data);
           });
-      }
-    } else {
-      //처음 카테고리가 지역 서비스 일때
-      //목데이터 활용
-      // fetch('/data/productsInfo.json')
-      //   .then(res => res.json())
-      //   .then(result => {
-      //     // setItemList(result);
-      //     const aroundItem = result.filter(obj => {
-      //       const distance = getDistance(
-      //         currentLat,
-      //         currentlng,
-      //         Number(obj.lat),
-      //         Number(obj.lng)
-      //       );
-
-      //       if (distance < 3) {
-      //         return obj;
-      //       } else {
-      //         return null;
-      //       }
-      //     });
-      //     setItemList(aroundItem);
-      //   });
-
-      // 백엔드 연결시 아래코드로 대체
-      fetch(`${APIS.ipAddress}/products`)
-        .then(res => res.json())
-        .then(result => {
-          const aroundItem = result.data.filter(obj => {
-            const distance = getDistance(
-              currentLat,
-              currentlng,
-              Number(obj.lat),
-              Number(obj.lng)
-            );
-            if (distance < 4) {
-              return obj;
-            } else {
-              return null;
-            }
-          });
-          setItemList(aroundItem);
-        });
+        break;
     }
   }, [currentCategory]);
-
-  // if (currentLat && currentlng) {
-  //   alert('현재 위치는 : ' + currentLat + ', ' + currentlng);
-  // }
 
   return (
     <WrapBody>
@@ -163,10 +139,11 @@ const ProductList = () => {
             value={currentCategory}
           >
             <CategoryOption value="">전체</CategoryOption>
-            <CategoryOption value="의류">의류</CategoryOption>
-            <CategoryOption value="전자기기">전자기기</CategoryOption>
-            <CategoryOption value="액세서리">액세서리</CategoryOption>
-            <CategoryOption value="기타">기타</CategoryOption>
+            {categoryList.map(cat => (
+              <CategoryOption key={cat.id} value={cat.id}>
+                {cat.name}
+              </CategoryOption>
+            ))}
             <CategoryOption value="지역 서비스">지역 서비스</CategoryOption>
           </Selector>
         </CategorySelector>

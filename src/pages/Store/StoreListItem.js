@@ -40,10 +40,10 @@ const StoreListItem = ({ item, curruntMenu }) => {
 };
 
 const Product = styled.div`
-  min-width: 194px;
-  min-height: 316px;
-  max-width: 194px;
-  max-height: 316px;
+  min-width: 210px;
+  min-height: 323px;
+  max-width: 210px;
+  max-height: 323px;
   margin: 0 10px 10px 0;
   border: 1px solid rgb(238, 238, 238);
   background-color: #fff;
@@ -54,8 +54,8 @@ const ProductLink = styled(Link)`
   color: inherit;
 `;
 const SelledProductImg = styled.div`
-  width: 193px;
-  height: 193px;
+  width: 210px;
+  height: 210px;
   background-image: url(${props => props.url});
   background-size: cover;
   opacity: 0.6;
@@ -66,8 +66,8 @@ const SelledProductImg = styled.div`
   line-height: 193px;
 `;
 const ProductImg = styled.img`
-  width: 193px;
-  height: 193px;
+  width: 210px;
+  height: 210px;
 `;
 
 const ProductBottom = styled.div`
