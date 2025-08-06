@@ -161,7 +161,7 @@ export default function ProductRegister() {
       })
       .catch(error => alert(error))
       .then(data => {
-        console.log(JSON.stringify(data));
+        // console.log(JSON.stringify(data));
         // this.setState({ files: [] });
         fetch(`${APIS.ipAddress}/products`, {
           method: 'POST',

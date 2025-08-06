@@ -19,8 +19,8 @@ const ProductList = () => {
   });
 
   const [category, setCategory] = useState(currentCategory); // 카테고리 변수가 정해지면 searchPrams.get("category")로 변경
-  const [currentLat, setCurrentLat] = useState(37.5062539); //37.5062539 선릉 위치
-  const [currentlng, setCurrentLng] = useState(127.0538496); //127.0538496
+  const [currentLat, setCurrentLat] = useState(null);
+  const [currentLon, setCurrentLng] = useState(null);
   const [itemList, setItemList] = useState();
   const [categoryList, setCategoryList] = useState([]);
 
@@ -60,11 +60,11 @@ const ProductList = () => {
 
   useEffect(() => {
     // 현재위치 구하는 메소드
-    navigator.geolocation.getCurrentPosition(pos => {
-      if (pos.coords.latitude && pos.coords.lngitude) {
-        setCurrentLat(pos.coords.latitude);
-        setCurrentLng(pos.coords.lngitude);
-        alert('현재 위치를 가져왔습니다.');
+    navigator.geolocation.getCurrentPosition(position => {
+      if (position.coords.latitude && position.coords.longitude) {
+        setCurrentLat(position.coords.latitude);
+        setCurrentLng(position.coords.longitude);
+        console.log('현재 위치를 가져왔습니다.');
       }
     });
   }, []);
@@ -81,26 +81,23 @@ const ProductList = () => {
   useEffect(() => {
     switch (currentCategory.id) {
       case 'region':
-        fetch(`${APIS.ipAddress}/products`)
-          .then(res => res.json())
-          .then(result => {
-            console.log(result);
-            const aroundItem = result.data.list.filter(obj => {
-              const distance = getDistance(
-                currentLat,
-                currentlng,
-                Number(obj.lat),
-                Number(obj.lng)
-              );
-              if (distance < 4) {
-                // 4 km 이내
-                return obj;
-              } else {
-                return null;
-              }
+        if (currentLat && currentLon) {
+          fetch(`${APIS.ipAddress}/products`)
+            .then(res => res.json())
+            .then(result => {
+              // console.log(result);
+              const aroundItem = result.data.list.filter(obj => {
+                const distance = getDistance(
+                  currentLat,
+                  currentLon,
+                  Number(obj.latitude),
+                  Number(obj.longitude)
+                );
+                return distance < 4;
+              });
+              setItemList({ total: aroundItem.length, list: aroundItem });
             });
-            setItemList({ total: aroundItem.length, list: aroundItem });
-          });
+        }
         break;
       case '':
         fetch(`${APIS.ipAddress}/products`)
