@@ -19,18 +19,23 @@ const ListItem = ({ item }) => {
     name,
     price,
     location,
-    latitude,
-    longitude,
-    category,
+    // latitude,
+    // longitude,
+    // category,
     images,
     createdAt,
   } = item;
-
+  const authorization = localStorage.getItem('TOKEN');
   const getTimeGap = utcDateString => {
     return dayjs.utc(utcDateString).tz('Asia/Seoul').fromNow();
   };
 
-  const setRecentProduct = () => {
+  const setRecentProduct = e => {
+    if (!authorization) {
+      alert('로그인이 필요한 서비스입니다.');
+      e.preventDefault(); // 이동 방지
+      return;
+    }
     if (!localStorage.getItem('recentProduct')) {
       const recentProduct = [];
       recentProduct.unshift(item);

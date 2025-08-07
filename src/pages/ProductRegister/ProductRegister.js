@@ -23,7 +23,7 @@ export default function ProductRegister() {
   const [showTooltip, setShowTooltip] = useState(false);
   //가격 콤마 찍기
   const [enteredNum, setEnterdNum] = useState('');
-
+  const authorization = localStorage.getItem('TOKEN');
   const {
     name,
     category_id,
@@ -58,7 +58,7 @@ export default function ProductRegister() {
   useEffect(() => {
     const userId = localStorage.getItem('MY_USER_ID');
     fetch(`${APIS.ipAddress}/users/${userId}`, {
-      headers: { authorization: localStorage.getItem('TOKEN') },
+      headers: { authorization },
     })
       .then(response => response.json())
       .then(data => {
@@ -148,7 +148,7 @@ export default function ProductRegister() {
     fetch(`${APIS.ipAddress}/products/image`, {
       method: 'POST',
       headers: {
-        Authorization: localStorage.getItem('TOKEN'),
+        authorization,
       },
       body: form,
     })
@@ -167,7 +167,7 @@ export default function ProductRegister() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json;charset=utf-8',
-            Authorization: localStorage.getItem('TOKEN'),
+            authorization,
           },
           body: JSON.stringify({
             imageUrl: data.data.imageUrl,
@@ -196,7 +196,7 @@ export default function ProductRegister() {
   //서버에 저장된 user 주소
   const getUserAddress = () => {
     fetch(`${APIS.ipAddress}/users/${userId}`, {
-      headers: { authorization: localStorage.getItem('TOKEN') },
+      headers: { authorization },
     })
       .then(response => response.json())
       .then(data => {

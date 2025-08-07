@@ -7,6 +7,7 @@ import { APIS } from '../../config';
 
 const Footer = () => {
   const [categoryList, setCategoryList] = useState([]);
+  const authorization = localStorage.getItem('TOKEN');
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -41,7 +42,7 @@ const Footer = () => {
         </LinkList>
         <LinkList className="linkList">
           <Service>SERVICE</Service>
-          {localStorage.getItem('TOKEN') ? (
+          {authorization ? (
             <>
               <ServiceLink className="link" to="/productregister">
                 판매하기

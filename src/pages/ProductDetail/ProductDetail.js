@@ -22,12 +22,13 @@ export default function ProductDetail() {
   const params = useParams();
   const productId = params.id;
   const navigate = useNavigate();
+  const authorization = localStorage.getItem('TOKEN');
 
   const MY_USER_ID = localStorage.getItem('MY_USER_ID'); // 숫자 변환 필수
   const isMyProduct = String(productInfo?.seller?.id) === String(MY_USER_ID);
 
   const purchaseLink = () => {
-    if (localStorage.getItem('TOKEN')) {
+    if (authorization) {
       navigate(`/payment/${productId}`);
     } else {
       alert('로그인이 필요한 서비스입니다.');
@@ -39,14 +40,14 @@ export default function ProductDetail() {
   };
 
   const productLike = () => {
-    if (localStorage.getItem('TOKEN')) {
+    if (authorization) {
       if (!isActive) {
         //좋아요 추가
         fetch(`${APIS.ipAddress}/likes/${productId}`, {
           method: 'post',
           headers: {
             'Content-Type': 'application/json;charset=utf-8',
-            authorization: localStorage.getItem('TOKEN'),
+            authorization,
           },
           body: JSON.stringify({
             follow: false,
@@ -71,7 +72,7 @@ export default function ProductDetail() {
           method: 'post',
           headers: {
             'Content-Type': 'application/json;charset=utf-8',
-            authorization: localStorage.getItem('TOKEN'),
+            authorization,
           },
           body: JSON.stringify({
             follow: false,
@@ -109,7 +110,7 @@ export default function ProductDetail() {
   useEffect(() => {
     //상품디테일정보 가져오는 api
     fetch(`${APIS.ipAddress}/products/${productId}`, {
-      headers: { authorization: localStorage.getItem('TOKEN') },
+      headers: { authorization },
     })
       // fetch('/data/productDetail.json') //mockdata
       .then(res => res.json())
@@ -193,111 +194,6 @@ export default function ProductDetail() {
                   <ListElementIcon src={iconLocal} /> {productInfo.location}
                 </ListElement>
               </DetailList>
-
-              {/* <ButtonWrap>
-                <InfoButton
-                  onClick={() => {
-                    if (localStorage.getItem('TOKEN')) {
-                      if (!isActive) {
-                        //좋아요 추가
-                        fetch(`${APIS.ipAddress}/likes/${productId}`, {
-                          method: 'post',
-                          headers: {
-                            'Content-Type': 'application/json;charset=utf-8',
-                            authorization: localStorage.getItem('TOKEN'),
-                          },
-                          body: JSON.stringify({
-                            follow: false,
-                          }),
-                        })
-                          .then(res => {
-                            if (res.status === 201) {
-                              alert('찜목록에 저장되었습니다.');
-                              setProductDetail({
-                                ...productInfo,
-                                likeCount: `${
-                                  Number(productInfo.likeCount) + 1
-                                }`,
-                              });
-                              setIsActive(true);
-                            } else {
-                              throw new Error('찜추가를 실패했습니다.');
-                            }
-                          })
-                          .catch(error => alert('찜추가를 실패했습니다.'));
-                      } else {
-                        //좋아요 취소
-                        fetch(`${APIS.ipAddress}/likes/${productId}`, {
-                          method: 'post',
-                          headers: {
-                            'Content-Type': 'application/json;charset=utf-8',
-                            authorization: localStorage.getItem('TOKEN'),
-                          },
-                          body: JSON.stringify({
-                            follow: false,
-                          }),
-                        })
-                          .then(res => {
-                            if (res.status === 201) {
-                              alert('찜목록에서 제거되었습니다.');
-                              setProductDetail({
-                                ...productInfo,
-                                likeCount: `${
-                                  Number(productInfo.likeCount) - 1
-                                }`,
-                              });
-                              setIsActive(false);
-                            } else {
-                              throw new Error('찜삭제를 실패했습니다.');
-                            }
-                          })
-                          .catch(error => alert('찜삭제를 실패했습니다.'));
-                      }
-                    } else {
-                      alert('로그인이 필요한 서비스 입니다.');
-                    }
-                  }}
-                  isActive={isActive}
-                >
-                  찜<LikeNumber> {productInfo.likeCount}</LikeNumber>
-                </InfoButton>
-
-                <StoreBtn onClick={purchaseLink}>바로구매</StoreBtn>
-
-                <DeleteButton
-                  onClick={() => {
-                    if (window.confirm('상품을 삭제하시겠습니까?')) {
-                      fetch(`${APIS.ipAddress}/products/${productId}`, {
-                        method: 'DELETE',
-                        headers: {
-                          authorization: localStorage.getItem('TOKEN'),
-                        },
-                      })
-                        .then(res => {
-                          if (res.ok) {
-                            alert('삭제되었습니다.');
-                            const list = JSON.parse(
-                              localStorage.getItem('recentProduct')
-                            ).filter(v => v.id !== Number(productId));
-                            localStorage.setItem(
-                              'recentProduct',
-                              JSON.stringify(list)
-                            );
-                            window.location.href = '/?category=';
-                          } else {
-                            throw new Error('삭제에 실패했습니다.');
-                          }
-                        })
-                        .catch(error => {
-                          alert('삭제에 실패했습니다.');
-                          console.error(error);
-                        });
-                    }
-                  }}
-                >
-                  삭제
-                </DeleteButton>
-              </ButtonWrap> */}
               <ButtonWrap>
                 <>
                   <InfoButton onClick={productLike} isActive={isActive}>
@@ -324,10 +220,14 @@ export default function ProductDetail() {
                     <DeleteButton
                       onClick={() => {
                         if (window.confirm('상품을 삭제하시겠습니까?')) {
+                          if (!authorization) {
+                            alert('로그인이 필요한 서비스입니다.');
+                            return;
+                          }
                           fetch(`${APIS.ipAddress}/products/${productId}`, {
                             method: 'DELETE',
                             headers: {
-                              authorization: localStorage.getItem('TOKEN'),
+                              authorization,
                             },
                           })
                             .then(res => {

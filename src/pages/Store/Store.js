@@ -7,9 +7,8 @@ import variables from '../../styles/variables';
 import StoreProducts from './StoreProducts';
 import StoreReviews from './StoreReviews';
 import StoreFollow from './StoreFollow';
-import { format, register } from 'timeago.js';
-import koLocale from 'timeago.js/lib/lang/ko'; // 한글로 변환
-register('ko', koLocale);
+import dayjs from 'dayjs';
+import 'dayjs/locale/ko'; // 한국어 표시
 
 export default function Store() {
   const [storeData, setStoreData] = useState();
@@ -31,16 +30,24 @@ export default function Store() {
     구매내역: false,
   });
   const [curruntMenu, setCurruntMenu] = useState('상품');
+  const [changedStoreAddress, setChangedStoreAddress] = useState();
+  const [addrBtnState, setAddrBtnState] = useState(false);
+  const [addressLength, setAddressLength] = useState(0);
   const params = useParams();
   const userId = params.id;
+  const authorization = localStorage.getItem('TOKEN');
+
+  const getTimeGap = utcDateString => {
+    return dayjs.utc(utcDateString).tz('Asia/Seoul').fromNow();
+  };
 
   //유저 정보 fetch
   useEffect(() => {
     //백엔드 서버에서 fetch
-    fetch(`${APIS.ipAddress}/users/1`, {
+    fetch(`${APIS.ipAddress}/users/${userId}`, {
       method: 'get',
       headers: {
-        authorization: localStorage.getItem('TOKEN'),
+        authorization,
       },
     })
       .then(res => {
@@ -59,20 +66,9 @@ export default function Store() {
         setFileImage(shopData.sellerImg);
         setChangedStoreName(shopData.sellerName);
         setChangedStoreInfo(shopData.sellerIntro);
+        setChangedStoreAddress(shopData.address);
         setFollowIsCheck(isFollow || false);
       });
-    // //mockdata fetch
-    // fetch('/data/storeInfo.json')
-    //   .then(res => res.json())
-    //   .then(result => {
-    //     setStoreData(result.shopData);
-    //     setIsMyShop(result.isMyShop);
-    //     setMyData(result.myData);
-    //     setFileImage(result.shopData.sellerImg);
-    //     setChangedStoreName(result.shopData.sellerName);
-    //     setChangedStoreInfo(result.shopData.sellerIntro);
-    //     setFollowIsCheck(result.isFollow);
-    //   });
   }, []);
 
   const menuChange = e => {
@@ -106,7 +102,7 @@ export default function Store() {
     fetch(`${APIS.ipAddress}/users/me`, {
       method: 'put',
       headers: {
-        Authorization: localStorage.getItem('TOKEN'),
+        authorization,
       },
       body: formData,
     })
@@ -120,6 +116,36 @@ export default function Store() {
         }
       })
       .catch(error => alert(error));
+  };
+
+  const handleAddressModify = () => {
+    if (addrBtnState) {
+      // 수정 완료 시: 백엔드에 주소 저장
+      fetch(`${APIS.ipAddress}/users/me`, {
+        method: 'put',
+        headers: {
+          'Content-Type': 'application/json;charset=utf-8',
+          authorization,
+        },
+        body: JSON.stringify({ address: changedStoreAddress }),
+      })
+        .then(res => {
+          if (res.status === 200) {
+            alert('주소가 변경되었습니다.');
+            setStoreData(prev => ({
+              ...prev,
+              address: changedStoreAddress,
+            }));
+          } else {
+            throw new Error('주소 변경에 실패하였습니다.');
+          }
+        })
+        .catch(error => alert(error));
+      setAddrBtnState(false); // 수정모드 종료
+    } else {
+      // 수정모드 진입
+      setAddrBtnState(true);
+    }
   };
 
   return (
@@ -159,7 +185,7 @@ export default function Store() {
                             method: 'post',
                             headers: {
                               'Content-Type': 'application/json;charset=utf-8',
-                              authorization: localStorage.getItem('TOKEN'),
+                              authorization,
                             },
                           })
                             .then(res => {
@@ -179,7 +205,7 @@ export default function Store() {
                             method: 'post',
                             headers: {
                               'Content-Type': 'application/json;charset=utf-8',
-                              authorization: localStorage.getItem('TOKEN'),
+                              authorization,
                             },
                           })
                             .then(res => {
@@ -231,16 +257,11 @@ export default function Store() {
                   <ModifyBtn
                     onClick={() => {
                       if (nameBtnState) {
-                        // setNameBtnState(false); // 백엔드 연결 시 주석처리
-                        // setStoreData(prev => ({
-                        //   ...prev,
-                        //   sellerName: changedStoreName,
-                        // }));
                         fetch(`${APIS.ipAddress}/users/me`, {
                           method: 'put',
                           headers: {
                             'Content-Type': 'application/json;charset=utf-8',
-                            authorization: localStorage.getItem('TOKEN'),
+                            authorization,
                           },
                           body: JSON.stringify({
                             nickname: changedStoreName,
@@ -270,10 +291,36 @@ export default function Store() {
               </RightStoreName>
               <StoreInfo>
                 <InfoSpan>
-                  🏠 상점 오픈일 {format(storeData.sellerOpenDay, 'ko')}
+                  📅 상점 오픈일 {getTimeGap(storeData.sellerOpenDay)}
                 </InfoSpan>
                 <InfoSpan>📦 상품 판매 {storeData.soldOutNum} 회</InfoSpan>
               </StoreInfo>
+              <RightStoreAddressWrap>
+                <AddressHeader>
+                  🏠 주소
+                  {isMyShop && (
+                    <ModifyBtn onClick={handleAddressModify}>
+                      {addrBtnState ? '수정 완료' : '주소 수정'}
+                    </ModifyBtn>
+                  )}
+                </AddressHeader>
+
+                {addrBtnState ? (
+                  <AddressInputWrap>
+                    <AddressInput
+                      maxLength={50}
+                      value={changedStoreAddress}
+                      onChange={e => {
+                        setChangedStoreAddress(e.target.value);
+                        setAddressLength(e.target.value.length);
+                      }}
+                    />
+                    <CharCount>{addressLength} / 50</CharCount>
+                  </AddressInputWrap>
+                ) : (
+                  <BlackAddress>{storeData.address}</BlackAddress>
+                )}
+              </RightStoreAddressWrap>
               <StoreTxt>
                 {txtBtnState ? (
                   <TxtInput
@@ -300,7 +347,7 @@ export default function Store() {
                           method: 'put',
                           headers: {
                             'Content-Type': 'application/json;charset=utf-8',
-                            authorization: localStorage.getItem('TOKEN'),
+                            authorization,
                           },
                           body: JSON.stringify({
                             description: changedStoreInfo,
@@ -546,6 +593,37 @@ const StoreNameInput = styled.textarea`
   font-weight: 700;
   outline: none;
 `;
+const RightStoreAddressWrap = styled.div`
+  margin-top: 10px;
+`;
+
+const AddressHeader = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  color: #888;
+  margin-bottom: 5px;
+  gap: 8px;
+`;
+
+const BlackAddress = styled.div`
+  font-size: 15px;
+  color: #888;
+  white-space: pre-line;
+  line-height: 1.6;
+`;
+
+// const AddressInput = styled.textarea`
+//   font-size: 15px;
+//   color: #333;
+//   border: 1px solid #ccc;
+//   width: 70%;
+//   height: 40px;
+//   resize: none;
+//   padding: 5px;
+//   font-family: inherit;
+// `;
+
 const ModifyBtn = styled.div`
   width: 62px;
   height: 20px;
@@ -560,7 +638,7 @@ const ModifyBtn = styled.div`
 `;
 const StoreInfo = styled.div`
   ${variables.flex('row', 'auto', 'center')}
-  padding: 20px 0;
+  padding: 15px 0;
   border-top: 1px solid #fafafa;
   border-bottom: 1px solid #fafafa;
 `;
@@ -571,16 +649,16 @@ const InfoSpan = styled.div`
 `;
 const StoreTxt = styled.div``;
 const TxtBox = styled.div`
-  height: 105px;
-  margin-top: 30px;
+  height: 55px;
+  margin-top: 15px;
   margin-bottom: 20px;
   font-size: 15px;
   font-weight: 400;
 `;
 const TxtInput = styled.textarea`
   width: 100%;
-  height: 101px;
-  margin-top: 30px;
+  height: 55px;
+  margin-top: 15px;
   margin-bottom: 20px;
   font-size: 15px;
   font-weight: 400;
@@ -630,4 +708,30 @@ const StarRatingWrapper = styled.div`
     width: 24px;
     height: 24px;
   }
+`;
+const AddressInputWrap = styled.div`
+  position: relative;
+  width: fit-content;
+`;
+
+const AddressInput = styled.textarea`
+  font-size: 15px;
+  color: #333;
+  border: 1px solid #ccc;
+  width: 670px;
+  height: 40px;
+  resize: none;
+  padding: 5px 60px 5px 5px; // 오른쪽에 글자수 공간 확보
+  font-family: inherit;
+  box-sizing: border-box;
+`;
+
+const CharCount = styled.div`
+  position: absolute;
+  right: 8px;
+  bottom: 50%;
+  transform: translateY(50%);
+  font-size: 12px;
+  color: #aaa;
+  pointer-events: none;
 `;

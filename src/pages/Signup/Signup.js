@@ -18,8 +18,9 @@ export default function Signup() {
   const [zoneCode, setZoneCode] = useState('');
   const [detailAddress, setDetailAddress] = useState('');
   // 위도 경도 값 관리
-  const [lat, setLat] = useState();
-  const [long, setLong] = useState();
+  const [latitude, setLat] = useState();
+  const [longitude, setLon] = useState();
+  const authorization = localStorage.getItem('TOKEN');
 
   useEffect(() => {
     const REST_API_KEY = process.env.REACT_APP_KAKAO_REST_API_KEY;
@@ -39,8 +40,8 @@ export default function Signup() {
     let geocoder = new kakao.maps.services.Geocoder();
     let callback = function (result, status) {
       if (status === kakao.maps.services.Status.OK) {
-        setLat(result[0].x);
-        setLong(result[0].y);
+        setLon(result[0].x);
+        setLat(result[0].y);
       }
     };
 
@@ -95,13 +96,13 @@ export default function Signup() {
             method: 'post',
             headers: {
               'Content-Type': 'application/json;charset=utf-8',
-              authorization: localStorage.getItem('TOKEN'),
+              authorization,
             },
             body: JSON.stringify({
               nickname: marketName,
-              address: fullAddress,
-              latitude: long,
-              longitude: lat,
+              address: `${fullAddress.trim()} ${detailAddress.trim()}`.trim(),
+              latitude,
+              longitude,
             }),
           })
             .then(res => {

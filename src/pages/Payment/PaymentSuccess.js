@@ -9,6 +9,8 @@ const PaymentSuccess = () => {
   const paymentKey = params.get('paymentKey');
   const order = params.get('orderId');
   const amount = params.get('amount');
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
   useEffect(() => {
     let axios = require('axios').default;
 
@@ -40,8 +42,7 @@ const PaymentSuccess = () => {
 
     let options = {
       method: 'POST',
-      // url: 'http://localhost:10101/tossPayment/confirm',
-      url: 'https://vvolt-market.kr/tossPayment/confirm',
+      url: `${BASE_URL}/tossPayment/confirm`,
       headers: {
         Authorization: `Basic dGVzdF9za19PQUxuUXZEZDJWSmw0OWxSbGphOE1qN1g0MW1OOg`,
         'Content-Type': 'application/json',

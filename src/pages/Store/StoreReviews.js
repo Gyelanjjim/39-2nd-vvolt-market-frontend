@@ -9,6 +9,7 @@ export default function StoreReviews({ myData, userId }) {
   const [reviewList, setReviewList] = useState();
   const [registerReview, setRegisterReview] = useState();
   const [registerScore, setRegisterScore] = useState(0.5);
+  const authorization = localStorage.getItem('TOKEN');
 
   useEffect(() => {
     // fetch('/data/reviewList.json')

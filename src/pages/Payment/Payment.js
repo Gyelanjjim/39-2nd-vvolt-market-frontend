@@ -22,6 +22,8 @@ export default function Payment() {
   //상품상세페이지 데이터
   const params = useParams();
   const productId = params.id;
+  const authorization = localStorage.getItem('TOKEN');
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   const changeHandler = (checked, id) => {
     if (checked) {
@@ -46,10 +48,8 @@ export default function Payment() {
           orderId: `111111111111${productId}`,
           orderName: productInfo.name,
           customerName: userInfo.realName,
-          // successUrl: 'http://localhost:3000/success',
-          successUrl: 'https://vvolt-market.kr/success',
-          // failUrl: 'http://localhost:3000/',
-          failUrl: 'https://vvolt-market.kr/',
+          successUrl: `${BASE_URL}/success`,
+          failUrl: `${BASE_URL}/`,
           flowMode: 'DIRECT',
           easyPay: '토스페이',
         })
@@ -65,7 +65,7 @@ export default function Payment() {
 
   useEffect(() => {
     fetch(`${APIS.ipAddress}/products/${productId}`, {
-      headers: { authorization: localStorage.getItem('TOKEN') },
+      headers: { authorization },
     })
       // fetch('/data/productDetail.json') //mockdata
       .then(res => res.json())
@@ -75,7 +75,7 @@ export default function Payment() {
       });
 
     fetch(`${APIS.ipAddress}/users/1`, {
-      headers: { authorization: localStorage.getItem('TOKEN') },
+      headers: { authorization },
     })
       .then(response => response.json())
       .then(data => {

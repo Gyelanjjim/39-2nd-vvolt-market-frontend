@@ -48,10 +48,10 @@ export default function SideBar() {
             );
           })}
       </ProductWrap>
-      <ProductWrap>
+      {/* <ProductWrap>
         <ProductTitle>앱다운로드</ProductTitle>
         <QrImg src={qrimg}></QrImg>
-      </ProductWrap>
+      </ProductWrap> */}
       <TopButton onClick={scrollToTop}>TOP</TopButton>
     </SidebarWrap>
   );

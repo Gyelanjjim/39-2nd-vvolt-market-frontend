@@ -1,13 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { format, register } from 'timeago.js';
-import koLocale from 'timeago.js/lib/lang/ko'; // 한글로 변환
-register('ko', koLocale);
-const StoreListItem = ({ item, curruntMenu }) => {
-  const { id, name, price, location, category, images, createdAt } = item;
+import dayjs from 'dayjs';
+import 'dayjs/locale/ko'; // 한국어 표시
 
-  const setRecentProduct = () => {
+const StoreListItem = ({ item, curruntMenu }) => {
+  const { id, name, price, location, images, createdAt } = item;
+  const authorization = localStorage.getItem('TOKEN');
+
+  const getTimeGap = utcDateString => {
+    return dayjs.utc(utcDateString).tz('Asia/Seoul').fromNow();
+  };
+
+  const setRecentProduct = e => {
+    if (!authorization) {
+      alert('로그인이 필요한 서비스입니다.');
+      e.preventDefault(); // 이동 방지
+      return;
+    }
     if (!localStorage.getItem('recentProduct')) {
       const recentProduct = [];
       recentProduct.unshift(item);
@@ -41,7 +51,7 @@ const StoreListItem = ({ item, curruntMenu }) => {
             <ProductName>{name}</ProductName>
             <ProductInfo>
               <ProductPrice>{Number(price).toLocaleString()} 원</ProductPrice>
-              <ProductTime>{format(createdAt, 'ko')}</ProductTime>
+              <ProductTime>{getTimeGap(createdAt)}</ProductTime>
             </ProductInfo>
           </ProductBottom>
           <ProductLocation>

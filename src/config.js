@@ -1,5 +1,4 @@
-// const BASE_URL = 'http://localhost:10101';
-const BASE_URL = 'https://vvolt-market.kr';
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export const APIS = {
   ipAddress: `${BASE_URL}/api`,

@@ -5,6 +5,7 @@ import StoreListItem from './StoreListItem';
 
 export default function StoreProducts({ curruntMenu, userId }) {
   const [itemList, setItemList] = useState();
+  const authorization = localStorage.getItem('TOKEN');
 
   useEffect(() => {
     if (curruntMenu === '상품') {
@@ -12,7 +13,7 @@ export default function StoreProducts({ curruntMenu, userId }) {
       fetch(`${APIS.ipAddress}/products/store/${userId}`, {
         method: 'get',
         headers: {
-          authorization: localStorage.getItem('TOKEN'),
+          authorization,
         },
       })
         .then(res => res.json())
@@ -29,7 +30,7 @@ export default function StoreProducts({ curruntMenu, userId }) {
     } else if (curruntMenu === '구매 내역') {
       // fetch('/data/productsInfo.json')
       fetch(`${APIS.ipAddress}/orders`, {
-        headers: { authorization: localStorage.getItem('TOKEN') },
+        headers: { authorization },
       })
         .then(res => res.json())
         .then(result => {

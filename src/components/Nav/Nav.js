@@ -16,8 +16,8 @@ const Nav = () => {
   const [searchInput, setSearchInput] = useState();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [categories, setCategories] = useState([]);
-
-  const isLoginCheck = !!localStorage.getItem('TOKEN');
+  const authorization = localStorage.getItem('TOKEN');
+  const isLoginCheck = !!authorization;
   const userId = localStorage.getItem('MY_USER_ID');
 
   useEffect(() => {
@@ -85,7 +85,7 @@ const Nav = () => {
             <SellIcon src="/images/sellicon.png" alt="판매 아이콘"></SellIcon>
             <Selling
               onClick={() => {
-                if (localStorage.getItem('TOKEN')) {
+                if (authorization) {
                   navigate('/productregister');
                 } else {
                   alert('로그인이 필요한 서비스입니다.');
@@ -103,7 +103,7 @@ const Nav = () => {
             ></MystoreIcon>
             <MystoreSpan
               onClick={() => {
-                if (localStorage.getItem('TOKEN') && userId) {
+                if (authorization && userId) {
                   navigate(`/store/${userId}`);
                 } else {
                   alert('로그인이 필요한 서비스입니다.');
