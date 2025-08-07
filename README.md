@@ -1,6 +1,7 @@
 # <p align="center">🛍️ VVolt Martket
 
-<P align="center">📆 2022.11.28 ~ 2022.12.09
+<P align="center">📆 2022.11.28 ~ 2022.12.09 (초기)
+<P align="center">📆 2025.07 ~ 2025.08 (수정)
 
 ## 🏆 VVolt Martket Goal
 
