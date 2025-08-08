@@ -23,7 +23,7 @@ export default function Payment() {
   const params = useParams();
   const productId = params.id;
   const authorization = localStorage.getItem('TOKEN');
-  const BASE_URL = process.env.REACT_APP_BASE_URL;
+  const BASE_URL = process.env.REACT_APP_FRONT_BASE_URL;
 
   const changeHandler = (checked, id) => {
     if (checked) {
