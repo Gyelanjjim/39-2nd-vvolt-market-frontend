@@ -1,6 +1,7 @@
 # <p align="center">🛍️ VVolt Martket
 
-<P align="center">📆 2022.11.28 ~ 2022.12.09
+<P align="center">📆 2022.11.28 ~ 2022.12.09 (초기)
+<P align="center">📆 2025.07 ~ 2025.08 (수정)
 
 ## 🏆 VVolt Martket Goal
 
@@ -9,6 +10,8 @@
 
 ## 📼 DEMO
 
+- <a href="https://vvolt-market.kr">📎 VVOLT Market</a>
+- <a href="https://vvolt-market.kr/api-docs">📎 VVOLT Market API 문서</a>
 - <a href="https://www.youtube.com/watch?v=UDNfYsCpGR4">📎 구동 영상</a>
 
 ## 👩‍💻 DB Modeling
