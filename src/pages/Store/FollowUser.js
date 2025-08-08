@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import variables from '../../styles/variables';
 
 const FollowUser = ({ followInfo }) => {
-  const { id, usernickname, user_image } = followInfo;
+  const { id, nickname, userImage } = followInfo;
   const navigator = useNavigate();
   return (
     <FollowUserBox
@@ -13,8 +13,8 @@ const FollowUser = ({ followInfo }) => {
         window.location.reload();
       }}
     >
-      <FollowUserImg src={user_image} />
-      <FollowUserName>{usernickname}</FollowUserName>
+      <FollowUserImg src={userImage} />
+      <FollowUserName>{nickname}</FollowUserName>
       {/* <FollwUserCount></FollwUserCount> */}
     </FollowUserBox>
   );
