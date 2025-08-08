@@ -69,7 +69,7 @@ export default function Store() {
         setChangedStoreAddress(shopData.address);
         setFollowIsCheck(isFollow || false);
       });
-  }, []);
+  }, [authorization, userId]);
 
   const menuChange = e => {
     setMenuState({

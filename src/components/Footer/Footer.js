@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import variables from '../../styles/variables';
 import axios from 'axios';
@@ -72,18 +72,17 @@ const Footer = () => {
                 }}
                 to="/login"
               >
-                로그인
+                회원가입/로그인
               </ServiceLink>
             </>
           )}
-          <A
-            className="link"
+          <ExternalServiceLink
             href="https://docs.google.com/forms/d/e/1FAIpQLSeb4DzFyTJSbozy2cf6Yq3i1-IAXpHAGVtFEUQ1HHYYKh_2DQ/viewform?usp=header"
             target="_blank"
             rel="noopener noreferrer"
           >
             문의하기
-          </A>
+          </ExternalServiceLink>
         </LinkList>
       </WrapLink>
       <WrapProfile className="wrapProfile">
@@ -260,3 +259,12 @@ const PROFILE_LIST = [
     github: 'https://github.com/Gyelanjjim',
   },
 ];
+const ExternalServiceLink = styled.a`
+  text-decoration: none;
+  display: block;
+  margin-top: 20px;
+  color: #000;
+  &:hover {
+    text-decoration: underline;
+  }
+`;

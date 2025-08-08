@@ -46,6 +46,3 @@ const FollowUserName = styled.div`
   font-weight: 500;
   margin-bottom: 5px;
 `;
-const FollwUserCount = styled.div`
-  font-size: 14px;
-`;
