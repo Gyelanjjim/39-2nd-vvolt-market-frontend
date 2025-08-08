@@ -13,7 +13,7 @@ const FollowUser = ({ followInfo }) => {
         window.location.reload();
       }}
     >
-      <FollowUserImg src={userImage} />
+      <FollowUserImg src={userImage || '/images/profile_img_default.png'} />
       <FollowUserName>{nickname}</FollowUserName>
       {/* <FollwUserCount></FollwUserCount> */}
     </FollowUserBox>
