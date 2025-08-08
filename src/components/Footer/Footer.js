@@ -76,6 +76,14 @@ const Footer = () => {
               </ServiceLink>
             </>
           )}
+          <A
+            className="link"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSeb4DzFyTJSbozy2cf6Yq3i1-IAXpHAGVtFEUQ1HHYYKh_2DQ/viewform?usp=header"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            문의하기
+          </A>
         </LinkList>
       </WrapLink>
       <WrapProfile className="wrapProfile">
