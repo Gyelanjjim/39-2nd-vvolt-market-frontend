@@ -19,7 +19,7 @@ jobs:
         run: npm run build
 
       - name: Copy files to EC2
-        uses: gyelanjjim/39-2nd-vvolt-market-frontend@main
+        uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
