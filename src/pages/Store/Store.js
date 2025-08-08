@@ -63,7 +63,7 @@ export default function Store() {
         setStoreData(shopData);
         setIsMyShop(isMyShop);
         setMyData(myData);
-        setFileImage(shopData.sellerImg || '/image/profile_img_default.png');
+        setFileImage(shopData.sellerImg || '/images/profile_img_default.png');
         setChangedStoreName(shopData.sellerName);
         setChangedStoreInfo(shopData.sellerIntro);
         setChangedStoreAddress(shopData.address);
