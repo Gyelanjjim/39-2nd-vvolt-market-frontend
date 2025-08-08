@@ -6,7 +6,9 @@ import variables from '../../styles/variables';
 
 export default function ProductRegister() {
   const navigate = useNavigate();
-  const [userId, setUserId] = useState();
+  const [userId, setUserId] = useState(() =>
+    localStorage.getItem('MY_USER_ID')
+  );
   const [categories, setCategories] = useState([]);
   const [productInfo, setProductInfo] = useState({
     name: '',
@@ -65,12 +67,12 @@ export default function ProductRegister() {
         const { address, latitude, longitude, writerId } = data.data.myData;
 
         setUserLocation(address);
-        setProductInfo({
-          ...productInfo,
+        setProductInfo(prev => ({
+          ...prev,
           latitude,
           longitude,
           location: address,
-        });
+        }));
         setUserId(writerId);
       });
 
@@ -81,7 +83,7 @@ export default function ProductRegister() {
         setCategories(data.data);
       })
       .catch(err => console.error('카테고리 불러오기 실패:', err));
-  }, [authorization, productInfo]);
+  }, [authorization]);
 
   const handleProductInfo = event => {
     const { name, value } = event.target;
