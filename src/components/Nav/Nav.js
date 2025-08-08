@@ -50,11 +50,8 @@ const Nav = () => {
               value={searchInput}
               onChange={e => setSearchInput(e.target.value)}
               readOnly
-            ></SearchInput>
-            <SearchIcon
-              src="/images/searchicon.png"
-              alt="검색 아이콘"
-            ></SearchIcon>
+            />
+            <SearchIcon src="/images/searchicon.png" alt="검색 아이콘" />
           </WrapSearch>
           <WrapSearchedList>
             {itemList &&
@@ -66,6 +63,7 @@ const Nav = () => {
                 ) {
                   return (
                     <SearchedList
+                      key={obj.id}
                       onClick={() => {
                         navigate(`/productdetail/${obj.id}`);
                       }}
@@ -82,7 +80,7 @@ const Nav = () => {
 
         <LinkArea>
           <SellArea>
-            <SellIcon src="/images/sellicon.png" alt="판매 아이콘"></SellIcon>
+            <SellIcon src="/images/sellicon.png" alt="판매 아이콘" />
             <Selling
               onClick={() => {
                 if (authorization) {
@@ -97,10 +95,7 @@ const Nav = () => {
           </SellArea>
 
           <Mystore>
-            <MystoreIcon
-              src="/images/mystoreicon.png"
-              alt="내 상점 아이콘"
-            ></MystoreIcon>
+            <MystoreIcon src="/images/mystoreicon.png" alt="내 상점 아이콘" />
             <MystoreSpan
               onClick={() => {
                 if (authorization && userId) {
@@ -118,7 +113,7 @@ const Nav = () => {
             <LoginIcon
               src="/images/loginicion.png"
               alt="로그인 회원가입 아이콘"
-            ></LoginIcon>
+            />
             {isLoginCheck ? (
               <LogoutTitlespan
                 to="/login"
@@ -330,7 +325,7 @@ const DropBoxUl = styled.ul`
   width: 230px;
 `;
 
-const DropBoxCtHeadTop = styled.div``;
+// const DropBoxCtHeadTop = styled.div``;
 
 const DropBoxCtHead = styled.div`
   height: 40px;
@@ -347,11 +342,11 @@ const DropBoxCtHead = styled.div`
   }
 `;
 
-const DropBoxCt1 = styled.div`
-  font-weight: bold;
-  padding: 20px 20px;
-  /* border-bottom: 1px solid #ddd; */
-`;
+// const DropBoxCt1 = styled.div`
+//   font-weight: bold;
+//   padding: 20px 20px;
+//   /* border-bottom: 1px solid #ddd; */
+// `;
 
 const DropBoxCt = styled(Link)`
   width: 100%;

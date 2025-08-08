@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import variables from '../../styles/variables';
-import { loadTossPayments } from '@tosspayments/payment-sdk';
+// import { loadTossPayments } from '@tosspayments/payment-sdk';
 import { useNavigate, useParams } from 'react-router-dom';
 import { APIS } from '../../config';
 
@@ -11,19 +11,25 @@ export default function Payment() {
   const [productInfo, setProductList] = useState([]);
   const [userInfo, setUserInfo] = useState([]);
   //  배송 요청 사항 값 관리
-  const [shippingStatus, setShippingStatus] = useState('');
+  const [
+    // shippingStatus,
+    setShippingStatus,
+  ] = useState('');
   // 결제수단 버튼 색 관리
   const [active, setActive] = useState(false);
   //토스
 
   //checkbox
   const [checkedBtn, setCheckedBtn] = useState([]);
-  const [disabled, setDisabled] = useState(false);
+  const [
+    // disabled,
+    setDisabled,
+  ] = useState(false);
   //상품상세페이지 데이터
   const params = useParams();
   const productId = params.id;
   const authorization = localStorage.getItem('TOKEN');
-  const BASE_URL = process.env.REACT_APP_FRONT_BASE_URL;
+  // const BASE_URL = process.env.REACT_APP_FRONT_BASE_URL;
 
   const changeHandler = (checked, id) => {
     if (checked) {
@@ -38,30 +44,30 @@ export default function Payment() {
   const isAllChecked = checkedBtn.length === 1;
   const isdisabled = !isAllChecked;
 
-  const onClickHandler = () => {
-    loadTossPayments(process.env.REACT_APP_TOSS).then(tossPayments => {
-      tossPayments
-        .requestPayment('카드', {
-          // 결제 수단
-          // 결제 정보
-          amount: productInfo.price,
-          orderId: `111111111111${productId}`,
-          orderName: productInfo.name,
-          customerName: userInfo.realName,
-          successUrl: `${BASE_URL}/success`,
-          failUrl: `${BASE_URL}/`,
-          flowMode: 'DIRECT',
-          easyPay: '토스페이',
-        })
-        .catch(function (error) {
-          if (error.code === 'USER_CANCEL') {
-            // 결제 고객이 결제창을 닫았을 때 에러 처리
-          } else if (error.code === 'INVALID_CARD_COMPANY') {
-            // 유효하지 않은 카드 코드에 대한 에러 처리
-          }
-        });
-    });
-  };
+  // const onClickHandler = () => {
+  //   loadTossPayments(process.env.REACT_APP_TOSS).then(tossPayments => {
+  //     tossPayments
+  //       .requestPayment('카드', {
+  //         // 결제 수단
+  //         // 결제 정보
+  //         amount: productInfo.price,
+  //         orderId: `111111111111${productId}`,
+  //         orderName: productInfo.name,
+  //         customerName: userInfo.realName,
+  //         successUrl: `${BASE_URL}/success`,
+  //         failUrl: `${BASE_URL}/`,
+  //         flowMode: 'DIRECT',
+  //         easyPay: '토스페이',
+  //       })
+  //       .catch(function (error) {
+  //         if (error.code === 'USER_CANCEL') {
+  //           // 결제 고객이 결제창을 닫았을 때 에러 처리
+  //         } else if (error.code === 'INVALID_CARD_COMPANY') {
+  //           // 유효하지 않은 카드 코드에 대한 에러 처리
+  //         }
+  //       });
+  //   });
+  // };
 
   useEffect(() => {
     fetch(`${APIS.ipAddress}/products/${productId}`, {
@@ -70,7 +76,7 @@ export default function Payment() {
       // fetch('/data/productDetail.json') //mockdata
       .then(res => res.json())
       .then(data => {
-        console.log(data);
+        // console.log(data);
         setProductList(data.data.product);
       });
 
@@ -81,7 +87,7 @@ export default function Payment() {
       .then(data => {
         setUserInfo(data.data?.myData);
       });
-  }, []);
+  }, [authorization, productId]);
 
   return (
     <PaymentContainer>
@@ -322,11 +328,11 @@ const UserAddress = styled.p`
   color: #2b2b2b;
 `;
 
-const UserZipCode = styled.span`
-  font-size: 15px;
-  color: #2b2b2b;
-  padding: 0px 5px 0px 0px;
-`;
+// const UserZipCode = styled.span`
+//   font-size: 15px;
+//   color: #2b2b2b;
+//   padding: 0px 5px 0px 0px;
+// `;
 
 const UserPhoneNum = styled.p`
   font-size: 15px;

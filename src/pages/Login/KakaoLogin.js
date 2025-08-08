@@ -27,7 +27,7 @@ export default function KakaoLogin() {
           navigate('/signup');
         }
       });
-  }, []);
+  }, [KAKAO_CODE, navigate]);
 
   const completionWord = '로그인 중입니다...';
   const [loginStatus, setLoginStatus] = useState('');

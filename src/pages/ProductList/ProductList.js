@@ -18,7 +18,7 @@ const ProductList = () => {
     name: '전체 상품',
   });
 
-  const [category, setCategory] = useState(currentCategory); // 카테고리 변수가 정해지면 searchPrams.get("category")로 변경
+  // const [category, setCategory] = useState(currentCategory); // 카테고리 변수가 정해지면 searchPrams.get("category")로 변경
   const [currentLat, setCurrentLat] = useState(null);
   const [currentLon, setCurrentLng] = useState(null);
   const [itemList, setItemList] = useState();
@@ -64,6 +64,7 @@ const ProductList = () => {
       if (position.coords.latitude && position.coords.longitude) {
         setCurrentLat(position.coords.latitude);
         setCurrentLng(position.coords.longitude);
+        // eslint-disable-next-line no-console
         console.log('현재 위치를 가져왔습니다.');
       }
     });
@@ -74,6 +75,7 @@ const ProductList = () => {
       .then(res => res.json())
       .then(data => setCategoryList(data.data))
       .catch(err => {
+        // eslint-disable-next-line no-console
         console.error('카테고리 목록 가져오기 실패:', err);
       });
   }, []);
@@ -114,7 +116,7 @@ const ProductList = () => {
           });
         break;
     }
-  }, [currentCategory]);
+  }, [currentCategory, currentLat, currentLon]);
 
   return (
     <WrapBody>

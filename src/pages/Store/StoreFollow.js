@@ -23,7 +23,7 @@ export default function StoreFollow({ curruntMenu, userId }) {
           setFollowList(result.data);
         });
     }
-  }, []);
+  }, [curruntMenu, userId]);
 
   const emptyMessage =
     curruntMenu === '팔로잉'

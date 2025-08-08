@@ -27,7 +27,7 @@ export default function ProductRegister() {
   const {
     name,
     category_id,
-    location,
+    // location,
     latitude,
     longitude,
     product_status_id,
@@ -81,7 +81,7 @@ export default function ProductRegister() {
         setCategories(data.data);
       })
       .catch(err => console.error('카테고리 불러오기 실패:', err));
-  }, []);
+  }, [authorization, productInfo]);
 
   const handleProductInfo = event => {
     const { name, value } = event.target;

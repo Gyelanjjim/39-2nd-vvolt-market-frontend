@@ -123,12 +123,17 @@ export default function ProductDetail() {
           localStorage.setItem('recentProduct', JSON.stringify(list));
           return;
         }
-        const { product, store, reviews, isLiked } = data.data;
+        const {
+          product,
+          store,
+          // reviews,
+          isLiked,
+        } = data.data;
         setProductDetail(product);
         setStoreInfo(store);
         setIsActive(isLiked);
       });
-  }, [productId]);
+  }, [productId, authorization]);
 
   const [isActive, setIsActive] = useState();
 
@@ -146,185 +151,176 @@ export default function ProductDetail() {
   }
 
   return (
-    <>
-      <WrapProductDetail>
-        {productInfo && storeInfo && (
-          <MainWrap>
-            <InfoWrap>
-              <Banner
-                spaceBetween={30}
-                centeredSlides={true}
-                navigation={true}
-                modules={[Navigation]}
-                className="mySwiper"
-              >
-                {productInfo &&
-                  productInfo.images.map(({ imageUrl }, index) => {
-                    return (
-                      <ImgSwiperSlide key={index}>
-                        <SlideImg
-                          src={imageUrl}
-                          alt={productInfo.productName}
-                        />
-                      </ImgSwiperSlide>
-                    );
-                  })}
-              </Banner>
+    <WrapProductDetail>
+      {productInfo && storeInfo && (
+        <MainWrap>
+          <InfoWrap>
+            <Banner
+              spaceBetween={30}
+              centeredSlides={true}
+              navigation={true}
+              modules={[Navigation]}
+              className="mySwiper"
+            >
+              {productInfo &&
+                productInfo.images.map(({ imageUrl }, index) => {
+                  return (
+                    <ImgSwiperSlide key={index}>
+                      <SlideImg src={imageUrl} alt={productInfo.productName} />
+                    </ImgSwiperSlide>
+                  );
+                })}
+            </Banner>
 
-              <ProductName>{productInfo.productName}</ProductName>
-              <Price>{Number(productInfo.price).toLocaleString()}원</Price>
-              <StatusList>
-                <StatusIcon>
-                  <StatusIconImg src={iconHeart} />
-                  {productInfo.likeCount}
-                </StatusIcon>
-                <StatusIcon>
-                  <StatusIconImg src={iconHour} />
-                  {getTimeGap(productInfo.createdAt)}
-                </StatusIcon>
-              </StatusList>
+            <ProductName>{productInfo.productName}</ProductName>
+            <Price>{Number(productInfo.price).toLocaleString()}원</Price>
+            <StatusList>
+              <StatusIcon>
+                <StatusIconImg src={iconHeart} />
+                {productInfo.likeCount}
+              </StatusIcon>
+              <StatusIcon>
+                <StatusIconImg src={iconHour} />
+                {getTimeGap(productInfo.createdAt)}
+              </StatusIcon>
+            </StatusList>
 
-              <DetailList>
-                <ListElement>
-                  <ListElementTit>상품상태</ListElementTit>
-                  {getStatus[productInfo.status]}
-                </ListElement>
-                <ListElement>
-                  <ListElementTit>거래지역</ListElementTit>
-                  <ListElementIcon src={iconLocal} /> {productInfo.location}
-                </ListElement>
-              </DetailList>
-              <ButtonWrap>
+            <DetailList>
+              <ListElement>
+                <ListElementTit>상품상태</ListElementTit>
+                {getStatus[productInfo.status]}
+              </ListElement>
+              <ListElement>
+                <ListElementTit>거래지역</ListElementTit>
+                <ListElementIcon src={iconLocal} /> {productInfo.location}
+              </ListElement>
+            </DetailList>
+            <ButtonWrap>
+              <InfoButton onClick={productLike} isActive={isActive}>
+                찜<LikeNumber> {productInfo.likeCount}</LikeNumber>
+              </InfoButton>
+              {!isMyProduct && (
+                <StoreBtn onClick={purchaseLink}>바로구매</StoreBtn>
+              )}
+
+              {isMyProduct && (
                 <>
-                  <InfoButton onClick={productLike} isActive={isActive}>
-                    찜<LikeNumber> {productInfo.likeCount}</LikeNumber>
-                  </InfoButton>
-                </>
-                {!isMyProduct && (
-                  <>
-                    <StoreBtn onClick={purchaseLink}>바로구매</StoreBtn>
-                  </>
-                )}
+                  <StoreBtn
+                    onClick={() => {
+                      alert('서비스 준비 중입니다');
+                      // navigate(`/edit/${productId}`);
+                    }}
+                  >
+                    정보 수정
+                  </StoreBtn>
 
-                {isMyProduct && (
-                  <>
-                    <StoreBtn
-                      onClick={() => {
-                        alert('서비스 준비 중입니다');
-                        // navigate(`/edit/${productId}`);
-                      }}
-                    >
-                      정보 수정
-                    </StoreBtn>
-
-                    <DeleteButton
-                      onClick={() => {
-                        if (window.confirm('상품을 삭제하시겠습니까?')) {
-                          if (!authorization) {
-                            alert('로그인이 필요한 서비스입니다.');
-                            return;
-                          }
-                          fetch(`${APIS.ipAddress}/products/${productId}`, {
-                            method: 'DELETE',
-                            headers: {
-                              authorization,
-                            },
-                          })
-                            .then(res => {
-                              if (res.ok) {
-                                alert('삭제되었습니다.');
-                                const list = JSON.parse(
-                                  localStorage.getItem('recentProduct')
-                                ).filter(v => v.id !== Number(productId));
-                                localStorage.setItem(
-                                  'recentProduct',
-                                  JSON.stringify(list)
-                                );
-                                window.location.href = '/?category=';
-                              } else {
-                                throw new Error('삭제에 실패했습니다.');
-                              }
-                            })
-                            .catch(error => {
-                              alert('삭제에 실패했습니다.');
-                              console.error(error);
-                            });
+                  <DeleteButton
+                    onClick={() => {
+                      if (window.confirm('상품을 삭제하시겠습니까?')) {
+                        if (!authorization) {
+                          alert('로그인이 필요한 서비스입니다.');
+                          return;
                         }
-                      }}
-                    >
-                      삭제
-                    </DeleteButton>
-                  </>
-                )}
-              </ButtonWrap>
-            </InfoWrap>
+                        fetch(`${APIS.ipAddress}/products/${productId}`, {
+                          method: 'DELETE',
+                          headers: {
+                            authorization,
+                          },
+                        })
+                          .then(res => {
+                            if (res.ok) {
+                              alert('삭제되었습니다.');
+                              const list = JSON.parse(
+                                localStorage.getItem('recentProduct')
+                              ).filter(v => v.id !== Number(productId));
+                              localStorage.setItem(
+                                'recentProduct',
+                                JSON.stringify(list)
+                              );
+                              window.location.href = '/?category=';
+                            } else {
+                              throw new Error('삭제에 실패했습니다.');
+                            }
+                          })
+                          .catch(error => {
+                            alert('삭제에 실패했습니다.');
+                            console.error(error);
+                          });
+                      }
+                    }}
+                  >
+                    삭제
+                  </DeleteButton>
+                </>
+              )}
+            </ButtonWrap>
+          </InfoWrap>
 
-            <DetailWrap>
-              <ProductInfo>
-                <PdTitle>상품정보</PdTitle>
-                <PdText>
-                  {productInfo.description.split('\n').map((line, idx) => (
-                    <React.Fragment key={idx}>
-                      {line}
-                      <br />
-                    </React.Fragment>
-                  ))}
-                </PdText>
-              </ProductInfo>
+          <DetailWrap>
+            <ProductInfo>
+              <PdTitle>상품정보</PdTitle>
+              <PdText>
+                {productInfo.description.split('\n').map((line, idx) => (
+                  <React.Fragment key={idx}>
+                    {line}
+                    <br />
+                  </React.Fragment>
+                ))}
+              </PdText>
+            </ProductInfo>
 
-              <StoreInfo>
-                {storeInfo.otherProducts.length === 0 ? (
-                  <StoreBox>
-                    <PdTitle>상점정보</PdTitle>
-                    <StoreName>{storeInfo.nickName}</StoreName>
-                    <StoreUl>
-                      <StoreLi> 상품 {storeInfo.productCount}개 </StoreLi>
-                      <StoreLi> 팔로워 {storeInfo.followerCount} </StoreLi>
-                    </StoreUl>
-                    <div style={{ marginTop: '20px' }}>
-                      상품이 더이상 없습니다.
-                    </div>
+            <StoreInfo>
+              {storeInfo.otherProducts.length === 0 ? (
+                <StoreBox>
+                  <PdTitle>상점정보</PdTitle>
+                  <StoreName>{storeInfo.nickName}</StoreName>
+                  <StoreUl>
+                    <StoreLi> 상품 {storeInfo.productCount}개 </StoreLi>
+                    <StoreLi> 팔로워 {storeInfo.followerCount} </StoreLi>
+                  </StoreUl>
+                  <div style={{ marginTop: '20px' }}>
+                    상품이 더이상 없습니다.
+                  </div>
 
-                    <StoreMoreBtn onClick={productMore}>상점 보기</StoreMoreBtn>
-                  </StoreBox>
-                ) : (
-                  <StoreBox>
-                    <PdTitle>상점정보</PdTitle>
-                    <StoreName>{storeInfo.nickName}</StoreName>
-                    <StoreUl>
-                      <StoreLi> 상품 {storeInfo.productCount}개 </StoreLi>
-                      <StoreLi> 팔로워 {storeInfo.followerCount} </StoreLi>
-                    </StoreUl>
+                  <StoreMoreBtn onClick={productMore}>상점 보기</StoreMoreBtn>
+                </StoreBox>
+              ) : (
+                <StoreBox>
+                  <PdTitle>상점정보</PdTitle>
+                  <StoreName>{storeInfo.nickName}</StoreName>
+                  <StoreUl>
+                    <StoreLi> 상품 {storeInfo.productCount}개 </StoreLi>
+                    <StoreLi> 팔로워 {storeInfo.followerCount} </StoreLi>
+                  </StoreUl>
 
-                    <StoreImgList>
-                      {storeInfo.otherProducts
-                        .slice(0, 2)
-                        .map((product, index) => (
-                          <StoreImgLi key={index}>
-                            <StoreImg src={product.imageUrls[0]} />
-                            <StorePrice>
-                              {Number(product.price).toLocaleString()}원
-                            </StorePrice>
-                          </StoreImgLi>
-                        ))}
-                    </StoreImgList>
+                  <StoreImgList>
+                    {storeInfo.otherProducts
+                      .slice(0, 2)
+                      .map((product, index) => (
+                        <StoreImgLi key={index}>
+                          <StoreImg src={product.imageUrls[0]} />
+                          <StorePrice>
+                            {Number(product.price).toLocaleString()}원
+                          </StorePrice>
+                        </StoreImgLi>
+                      ))}
+                  </StoreImgList>
 
-                    <StoreMoreBtn onClick={productMore}>
-                      <BtnRed>
-                        {storeInfo.productCount -
-                          Math.min(storeInfo.otherProducts.length, 2)}
-                        개
-                      </BtnRed>
-                      상품 더보기
-                    </StoreMoreBtn>
-                  </StoreBox>
-                )}
-              </StoreInfo>
-            </DetailWrap>
-          </MainWrap>
-        )}
-      </WrapProductDetail>
-    </>
+                  <StoreMoreBtn onClick={productMore}>
+                    <BtnRed>
+                      {storeInfo.productCount -
+                        Math.min(storeInfo.otherProducts.length, 2)}
+                      개
+                    </BtnRed>
+                    상품 더보기
+                  </StoreMoreBtn>
+                </StoreBox>
+              )}
+            </StoreInfo>
+          </DetailWrap>
+        </MainWrap>
+      )}
+    </WrapProductDetail>
   );
 }
 const WrapProductDetail = styled.div`
@@ -336,14 +332,14 @@ const MainWrap = styled.div`
   width: 1000px;
 `;
 
-const ProductImg = styled.img`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 428px;
-  height: 428px;
-  border: 1px solid black;
-`;
+// const ProductImg = styled.img`
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   width: 428px;
+//   height: 428px;
+//   border: 1px solid black;
+// `;
 
 const ProductName = styled.div`
   line-height: 40px;
@@ -491,14 +487,14 @@ const StoreLi = styled.li`
   }
 `;
 
-const StoreFollowBtn = styled.button`
-  margin-top: 20px;
-  font-size: 16px;
-  border: 1px solid #eee;
-  background: none;
-  width: 100%;
-  line-height: 40px;
-`;
+// const StoreFollowBtn = styled.button`
+//   margin-top: 20px;
+//   font-size: 16px;
+//   border: 1px solid #eee;
+//   background: none;
+//   width: 100%;
+//   line-height: 40px;
+// `;
 
 const StoreImgList = styled.ul`
   margin: 20px -4px 0;
@@ -547,9 +543,9 @@ const BtnRed = styled.span`
   cursor: pointer;
 `;
 
-const StoreBtnWrap = styled.div`
-  margin-top: 50px;
-`;
+// const StoreBtnWrap = styled.div`
+//   margin-top: 50px;
+// `;
 
 const StoreBtn = styled.button`
   height: 50px;
@@ -585,10 +581,10 @@ const SlideImg = styled.img`
   border: 1px solid black;
 `;
 
-const LikeImg = styled.img`
-  width: 20px;
-  line-height: 20px;
-`;
+// const LikeImg = styled.img`
+//   width: 20px;
+//   line-height: 20px;
+// `;
 
 const DeleteButton = styled.button`
   height: 50px;

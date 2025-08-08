@@ -37,7 +37,7 @@ export default function StoreProducts({ curruntMenu, userId }) {
           setItemList(result);
         });
     }
-  }, []);
+  }, [userId, authorization, curruntMenu]);
 
   const emptyMessage =
     curruntMenu === '상품'

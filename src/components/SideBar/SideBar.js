@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import qrimg from './../../assets/images/qrcode.png';
+// import qrimg from './../../assets/images/qrcode.png';
 
 export default function SideBar() {
   const navigate = useNavigate();
@@ -101,9 +101,9 @@ const WishImg = styled.div`
   padding-bottom: 5px;
 `;
 
-const QrImg = styled.img`
-  width: 100%;
-`;
+// const QrImg = styled.img`
+//   width: 100%;
+// `;
 
 const ProductNum = styled.p`
   margin-bottom: 20px;

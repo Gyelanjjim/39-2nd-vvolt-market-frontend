@@ -9,7 +9,7 @@ export default function StoreReviews({ myData, userId }) {
   const [reviewList, setReviewList] = useState();
   const [registerReview, setRegisterReview] = useState();
   const [registerScore, setRegisterScore] = useState(0.5);
-  const authorization = localStorage.getItem('TOKEN');
+  // const authorization = localStorage.getItem('TOKEN');
 
   useEffect(() => {
     // fetch('/data/reviewList.json')
@@ -24,7 +24,7 @@ export default function StoreReviews({ myData, userId }) {
         // console.log(result.review_list);
         setReviewList(result.review_list);
       });
-  }, []);
+  }, [userId]);
 
   // 나중에 재검토
   // const addReview = e => {

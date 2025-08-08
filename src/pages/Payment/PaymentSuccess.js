@@ -5,7 +5,10 @@ import PaymentSuccessText from 'react-moving-text';
 
 const PaymentSuccess = () => {
   const usenavigate = useNavigate();
-  const [params, setParams] = useSearchParams();
+  const [
+    params,
+    // setParams
+  ] = useSearchParams();
   const paymentKey = params.get('paymentKey');
   const order = params.get('orderId');
   const amount = params.get('amount');
@@ -30,10 +33,10 @@ const PaymentSuccess = () => {
     axios
       .request(options)
       .then(function (response) {
-        console.log(response.data);
+        // console.log(response.data);
       })
       .catch(function (error) {
-        console.error(error);
+        // console.error(error);
       });
   });
 
@@ -56,10 +59,10 @@ const PaymentSuccess = () => {
     axios
       .request(options)
       .then(function (response) {
-        console.log(response.data);
+        // console.log(response.data);
       })
       .catch(function (error) {
-        console.error(error);
+        // console.error(error);
       });
   });
 

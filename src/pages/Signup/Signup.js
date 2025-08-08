@@ -30,6 +30,7 @@ export default function Signup() {
       script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${REST_API_KEY}&libraries=services`;
       script.async = true;
       script.onload = () => {
+        // eslint-disable-next-line no-console
         console.log('✅ Kakao Maps SDK 로드 완료');
       };
       document.head.appendChild(script);
